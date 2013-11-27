@@ -6,4 +6,4 @@ public class File2 {
 		
 		System.out.println(100);
 	}
-{
+}
