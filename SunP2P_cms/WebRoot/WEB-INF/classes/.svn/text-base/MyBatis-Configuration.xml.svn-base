@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- setting配置,在null时也调用 setter,适应于返回Map,3.2版本号以上可用 -->
+	<settings>
+		<setting name="callSettersOnNulls" value="true"/>
+	</settings>
+	<typeAliases>
+		<typeAlias alias="ProdBaseInfo" type="com.sunyard.directbank.prod.model.ProdBaseInfo"/>
+		<typeAlias alias="ShareInall" type="com.sunyard.directbank.batchp2p.model.ShareInall"/>
+		<typeAlias alias="BatchProdRepay" type="com.sunyard.directbank.batchp2p.model.BatchProdRepay"/>
+		<typeAlias alias="BatchRepaymentList" type="com.sunyard.directbank.batchp2p.model.BatchRepaymentList"/>
+		<typeAlias alias="EAccountAmtList" type="com.sunyard.directbank.batchp2p.model.EAccountAmtList"/>
+		<typeAlias alias="ShareList" type="com.sunyard.directbank.batchp2p.model.ShareList"/>
+		<typeAlias alias="FinanceModel" type="com.sunyard.directbank.finance.model.FinanceModel"/>
+	</typeAliases>
+	<mappers>
+		<mapper resource="com/sunyard/directbank/base/dao/CommonPageDao.xml" />
+		<mapper resource="com/sunyard/directbank/fund/dao/FundInfoDao.xml" />
+		<mapper resource="com/sunyard/directbank/p2p/dao/P2pInfoDao.xml" />
+		<mapper resource="com/sunyard/directbank/cust/dao/CustInfoDao.xml" />
+		<mapper resource="com/sunyard/directbank/trans/dao/TransInfoDao.xml" />
+		<mapper resource="com/sunyard/directbank/shareinall/dao/ShareInallDao.xml"/>
+		<mapper resource="com/sunyard/directbank/sharelist/dao/ShareListDao.xml"/>
+		<mapper resource="com/sunyard/directbank/syslog/dao/SysLogDao.xml" />
+		<mapper resource="com/sunyard/directbank/syslog/dao/OperLogDao.xml" />
+		<mapper resource="com/sunyard/directbank/capital/dao/CapitalInfoDao.xml" />
+		<mapper resource="com/sunyard/directbank/amtlist/dao/AmtListDao.xml" />
+		<mapper resource="com/sunyard/directbank/eaccount/dao/EacCountDao.xml" />
+		<mapper resource="com/sunyard/directbank/manager/dao/ManagerFinanceDao.xml" />
+		<mapper resource="com/sunyard/directbank/borrower/dao/BorrowerFinanceDao.xml" />
+		<mapper resource="com/sunyard/directbank/sumdata/dao/SumDataDao.xml" />
+		<mapper resource="com/sunyard/directbank/role/dao/RoleDao.xml"/>
+		<mapper resource="com/sunyard/directbank/user/dao/UserDao.xml"/>
+		<mapper resource="com/sunyard/directbank/department/dao/DepartmentDao.xml"/>
+		<mapper resource="com/sunyard/directbank/privilege/dao/PrivilegeDao.xml"/>
+		<mapper resource="com/sunyard/directbank/dict/dao/DictInfoDao.xml"/>
+		<mapper resource="com/sunyard/directbank/finance/dao/FinanceDao.xml"/>
+		<mapper resource="com/sunyard/directbank/sysparam/dao/SysParamDao.xml"/>
+		<mapper resource="com/sunyard/directbank/prod/dao/ProdInfoDao.xml"/>
+		<mapper resource="com/sunyard/directbank/returncode/dao/ReturnCodeDao.xml"/>
+		<mapper resource="com/sunyard/directbank/transaccreq/dao/TransAccreqDao.xml"/>
+		<mapper resource="com/sunyard/directbank/transfrozen/dao/TransFrozenDao.xml"/>
+		<mapper resource="com/sunyard/directbank/batchdate/dao/BatchDateDao.xml"/>
+		<mapper resource="com/sunyard/directbank/batchorder/dao/BatchOrderDao.xml"/>
+		<mapper resource="com/sunyard/directbank/batchp2p/dao/BatchP2pDao.xml"/>
+		<mapper resource="com/sunyard/directbank/mujifailed/dao/MujiFailedDao.xml"/>
+		<mapper resource="com/sunyard/directbank/comActive/dao/ComActiveDao.xml"/>
+		<mapper resource="com/sunyard/directbank/voucher/dao/VoucherDao.xml"/>
+		<mapper resource="com/sunyard/directbank/transstatus/dao/TransStatusDao.xml"/>
+		<mapper resource="com/sunyard/directbank/userapprove/dao/UserApproveDao.xml"/>
+	</mappers>
+</configuration>
+

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.transaccreq.dao.TransAccreqDao">
+	<!-- 查询条件 -->
+	<sql id="queryDynSql">
+		<if test="serial_id !=null and serial_id !='' ">
+			AND ac.serial_id LIKE '%${serial_id}%'
+		</if>
+		<if test="trans_code !=null and trans_code !='' ">
+			AND ac.trans_code LIKE '%${trans_code}%'
+		</if>
+		<if test="trade_state !=null and trade_state !='' ">
+			AND ac.trade_state LIKE '%${trade_state}%'
+		</if>
+		<if test="eacc_no !=null and eacc_no !='' ">
+			AND ac.eacc_no LIKE '%${eacc_no}%'
+		</if>
+		<if test="start_time !=null and start_time !=''">
+			<![CDATA[AND DATE_FORMAT(ac.trans_date,'%Y-%m-%d') >= '${start_time}']]>
+		</if>
+		<if test="end_time !=null and end_time !='' ">
+			<![CDATA[AND DATE_FORMAT(ac.trans_date,'%Y-%m-%d') <= '${end_time}']]>
+		</if>
+	</sql>
+	
+	<!-- 查询字段 -->
+	<sql id="sqlBeginSelect">
+		SELECT ac.serial_id,ac.trans_code,ac.trans_name,ac.trade_state,ac.trans_date,
+			DATE_FORMAT(ac.trans_time,'%T')trans_time,ac.eacc_no,ac.cus_type,ea.name,ac.channel 
+	</sql>
+	
+	<!-- 查询统计 -->
+	<sql id="sqlBeginCount">
+		select count(*)
+	</sql>
+	
+	<!-- 查询表 -->
+	<sql id="sqlBody">
+		FROM trans_accreq ac LEFT JOIN eacc_accountinfo ea ON ac.eacc_no=ea.eacc_no
+		WHERE 1=1
+		<include refid="queryDynSql" />
+	</sql>
+	
+	<!-- 查询所有记录，供下载使用 -->
+	<select id="selectList" parameterType="java.util.Map" resultType="java.util.Map">
+		<include refid="sqlBeginSelect"/>
+		<include refid="sqlBody"/>
+	</select>
+	
+	<!-- 查询总记录数 -->
+	<select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		<include refid="sqlBeginCount"/>
+		<include refid="sqlBody"/>
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="pageQuery" parameterType="java.util.Map" resultType="java.util.Map">
+		<include refid="sqlBeginSelect"/>
+		<include refid="sqlBody"/>
+		LIMIT #{startRow},#{endRow}
+	</select>
+</mapper>

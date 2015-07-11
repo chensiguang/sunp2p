@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.prod.dao.ProdInfoDao">
+     
+     <sql id="queryDynSql">
+       <if test="prod_id != null and prod_id !='' " >
+           AND prod_id LIKE '${prod_id}%'
+       </if>
+       <if test="prod_type != null and prod_type !='' " >
+           AND prod_type LIKE '%${prod_type}%'
+       </if>
+       <if test="prod_state != null and prod_state !=''">
+           AND prod_state LIKE '%${prod_state}%'
+       </if>
+       <if test="issue_state != null and issue_state !=''">
+           AND issue_state LIKE '%${issue_state}%'
+       </if>
+       <if test="repay_type != null and repay_type !=''">
+           AND repay_type LIKE '%${repay_type}%'
+       </if>
+       <if test="value_date != null and value_date !=''">
+       	   and value_date = #{value_date}
+       </if>
+       <if test="expire_date != null and expire_date !=''">
+           and expire_date = #{expire_date}
+       </if>
+      </sql>
+     <select id="getId" parameterType="com.sunyard.directbank.prod.model.ProdBaseInfo"  resultType="java.lang.String">
+         SELECT prod_id  FROM prod_productinfo  WHERE 1=1 
+         <include refid = "queryDynSql"/> 
+     </select>
+     <select id="select" resultType="com.sunyard.directbank.prod.model.ProdBaseInfo">
+         SELECT *  FROM prod_productinfo  WHERE 1=1 
+         <include refid = "queryDynSql"/> 
+     </select>
+      
+      <select id="selectMaxExt" resultType="java.lang.String">
+         SELECT MAX(prod_borrowerinfo.borrower_id)  FROM prod_borrowerinfo  
+     </select>
+       
+     <select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) from prod_productinfo where 1=1
+		<include refid="queryDynSql"/>
+	 </select>
+	
+	 <select id="pageQuery" parameterType="java.util.Map" resultType="com.sunyard.directbank.prod.model.ProdBaseInfo">
+		select * from prod_productinfo where 1=1 
+		 <include refid="queryDynSql" />
+		limit #{startRow},#{endRow}		
+	 </select> 
+	 
+	 <select id="loadprodInfoById" parameterType="java.lang.Integer" resultType="com.sunyard.directbank.prod.model.ProdBaseInfo">
+		select * from prod_productinfo where prod_id = #{prod_id}
+	 </select> 
+	 
+	  <select id="loadProdExtById" parameterType="java.lang.String" resultType="com.sunyard.directbank.prod.model.ProdExtInfo">
+		select * from prod_borrowerinfo where borrower_id = #{exp_id}
+	 </select>
+	 
+	 <insert id="insert" parameterType="com.sunyard.directbank.prod.model.ProdBaseInfo" >
+		insert into prod_productinfo
+			( prod_id, prod_name, prod_type,nav,nav_date, nav_days,total_limit,
+			remain_limit,saled_limit,currency,value_type,sell_date,value_date,
+			cycle_unit,cycle,expire_date,days,parti_num,prod_schedule,ist_7day,
+			ist_year,addition_limit,lowest_limit,debit_account,crebit_account,
+			risk_lvl,prod_state,prod_readme,prod_publisher,prod_checker,
+			hpage_promoted,quota_control,web_total,app_total,weixin_total,
+			sale_channel_control,sale_channel,guarantee_way,flag,issue_state,
+			prod_typist,repay_type,next_repay_date,exp_id,prod_pledge,reserve1,financ_id,transfer_rate,transfer_valid_day)
+			
+		values
+			( #{prod_id},#{prod_name},#{prod_type},#{nav},#{nav_date},#{nav_days}, #{total_limit},
+			#{remain_limit},#{saled_limit}, #{currency}, #{value_type}, #{sell_date}, #{value_date},
+			   #{cycle_unit},#{cycle},#{expire_date},#{days},#{parti_num},#{prod_schedule},#{ist_7day},
+			   #{ist_year},#{addition_limit},#{lowest_limit},#{debit_account},#{crebit_account},
+			   #{risk_lvl},#{prod_state},#{prod_readme},#{prod_publisher},#{prod_checker},
+			   #{hpage_promoted},#{quota_control}, #{web_total},#{app_total},#{weixin_total},
+			   #{sale_channel_control},#{sale_channel}, #{guarantee_way}, #{flag},#{issue_state},
+			   #{prod_typist},#{repay_type},#{next_repay_date},#{exp_id},#{prod_pledge},#{reserve1},#{financ_id},
+			   #{transfer_rate},#{transfer_valid_day}
+			)
+	</insert>
+	 
+	 <insert id="insertExt" parameterType="com.sunyard.directbank.prod.model.ProdExtInfo">
+	       insert into prod_borrowerinfo
+			(borrower_id,borrower_type,borrower_name,borrower_age,borrower_edu,borrower_adr,
+			  borrower_inc,borrower_src)
+		values
+			( #{borrower_id},#{borrower_type},#{borrower_name},#{borrower_age},#{borrower_edu},
+			#{borrower_adr}, #{borrower_inc}, #{borrower_src}
+			)
+	 </insert>
+	 
+	 	 <update id="update" parameterType="com.sunyard.directbank.prod.model.ProdBaseInfo" >
+		update  prod_productinfo   set
+			 prod_name=#{prod_name}, prod_type=#{prod_type},
+			 total_limit=#{total_limit},remain_limit=#{remain_limit},value_type=#{value_type},
+			 sell_date=#{sell_date},value_date=#{value_date},
+			 cycle=#{cycle},expire_date=#{expire_date},
+			 ist_year=#{ist_year},addition_limit=#{addition_limit},lowest_limit=#{lowest_limit},	
+			risk_lvl=#{risk_lvl},prod_state=#{prod_state},
+			hpage_promoted=#{hpage_promoted},quota_control=#{quota_control},
+			web_total=#{web_total},app_total=#{app_total},weixin_total=#{weixin_total},
+			sale_channel_control=#{sale_channel_control},
+			sale_channel=#{sale_channel},debit_account=#{debit_account},crebit_account=#{crebit_account},	
+			repay_type=#{repay_type},exp_id=#{exp_id},financ_id=#{financ_id},
+			transfer_rate=#{transfer_rate},transfer_valid_day=#{transfer_valid_day},issue_state = #{issue_state}
+		where prod_id=#{prod_id}
+	</update>
+	<insert id="updateExt" parameterType="com.sunyard.directbank.prod.model.ProdExtInfo">
+	     update  prod_borrowerinfo set
+			borrower_type=#{borrower_type},borrower_name=#{borrower_name},
+			borrower_age=#{borrower_age},borrower_edu=#{borrower_edu},borrower_adr=#{borrower_adr},
+			borrower_inc=#{borrower_inc},borrower_src=#{borrower_src}
+		  where borrower_id=#{borrower_id }
+	 </insert>
+	 
+	 <delete id="deleteBatch" parameterType="java.util.List">
+		delete from prod_productinfo where prod_id in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")" >
+			#{item}
+		</foreach>
+	 </delete>
+	
+	 <delete id="deleteExt" parameterType="java.util.List">
+		delete from prod_borrowerinfo where borrower_id in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")" >
+			#{item}
+		</foreach>
+	 </delete>
+	 
+	 <update id="updateIssueState" parameterType="com.sunyard.directbank.prod.model.ProdBaseInfo">
+		update prod_productinfo set issue_state = #{issue_state},prod_checker = #{prod_checker} where prod_id = #{prod_id}
+	</update>
+	
+	<select id="getProdInfoList" parameterType="ProdBaseInfo" resultType="ProdBaseInfo">
+		select * from prod_productinfo where 1=1
+		<include refid = "queryDynSql"/>
+	</select>
+</mapper>

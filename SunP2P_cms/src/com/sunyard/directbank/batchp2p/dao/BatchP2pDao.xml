@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.batchp2p.dao.BatchP2pDao">
+	<select id="getRepayDateEqualTodayAndNotPay" parameterType="BatchProdRepay" resultType="java.util.Map">
+		SELECT n.* FROM batch_prodrepay n ,prod_productinfo m WHERE n.prod_id = m.prod_id AND <![CDATA[ n.repay_date <= m.next_repay_date]]> and status = #{status}
+	</select>
+	
+	<update id="updateProdRealRepayAmt" parameterType="BatchProdRepay">
+		update batch_prodrepay set status = #{status}, real_repay_date = #{real_repay_date},real_repay_amt = #{real_repay_amt}
+		where prod_id = #{prod_id} and repay_num = #{repay_num}
+	</update>
+	
+	<select id="getCustRepaymentlistByPK" parameterType="BatchProdRepay" resultType="BatchRepaymentList">
+		select * from batch_repaymentlist where prod_id = #{prod_id} and repay_num = #{repay_num}
+	</select>
+	
+	<update id="updateEachCustRealRepay" parameterType="BatchRepaymentList">
+		update batch_repaymentlist set repay_status =#{repay_status},real_repay_date = #{real_repay_date},
+		real_repay_amount =#{real_repay_amount},real_repay_val =#{real_repay_val},real_repay_amt =#{real_repay_amt}
+		where prod_id = #{prod_id} and repay_num = #{repay_num} and eacc_no =#{eacc_no}
+	</update>
+</mapper>

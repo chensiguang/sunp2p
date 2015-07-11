@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.batchorder.dao.BatchOrderDao">
+
+	<!-- 查询记录信息总数 -->
+	<select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM batch_order ba WHERE 1=1
+		<include refid="queryDynSql"/>
+	</select>
+	
+	<!-- 查询清算信息 -->
+	<select id="pageQuery" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT ba.task_code, ba.task_name,ba.batch_group,ba.parent_task_code,ba.redo_flag,ba.op_times,
+			ba.last_trans_date,ba.begin_time,ba.deal_status,ba.return_code,ba.return_msg 
+		FROM batch_order ba WHERE 1 = 1
+		<include refid="queryDynSql"/>
+		LIMIT #{startRow}, #{rows}
+	</select>
+	
+	<!-- 添加功能 -->
+	<insert id="save" parameterType="java.util.Map">
+		INSERT INTO batch_order(task_code,task_name,batch_group,parent_task_code,redo_flag,delay_flag,delay_time)
+		VALUES(#{task_code},#{task_name},#{batch_group},#{parent_task_code},#{redo_flag},#{delay_flag},#{delay_time}) 
+	</insert>
+	
+	<!-- 查询某一条清算信息 -->
+	<select id="getById" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT task_code,task_name,batch_group,parent_task_code,redo_flag,delay_flag,delay_time 
+		FROM batch_order WHERE task_code = #{task_code}
+	</select>
+	
+	<!-- 修改功能 -->
+	<update id="update">
+		UPDATE batch_order SET task_name=#{task_name},batch_group=#{batch_group},parent_task_code=#{parent_task_code},
+			redo_flag=#{redo_flag},delay_flag=#{delay_flag},delay_time=#{delay_time} 
+		WHERE task_code=#{task_code}
+	</update>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteBatch" parameterType="java.util.List">
+		DELETE FROM batch_order WHERE task_code in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")" >
+			#{item}
+		</foreach>
+	</delete>
+	
+	<sql id="queryDynSql">
+		<if test="task_code != null and task_code !=''">
+			AND ba.task_code LIKE '%${task_code}%'
+		</if>
+		<if test="batch_group != null and batch_group !=''">
+			AND ba.batch_group LIKE '%${batch_group}%'
+		</if>
+		<if test="parent_task_code != null and parent_task_code !=''">
+			AND ba.parent_task_code LIKE '%${parent_task_code}%'
+		</if>
+		<if test="deal_status != null and deal_status !=''">
+			AND ba.deal_status LIKE '%${deal_status}%'
+		</if>
+	</sql>
+</mapper>

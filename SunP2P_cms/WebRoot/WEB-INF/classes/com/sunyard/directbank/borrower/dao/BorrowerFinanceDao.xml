@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.borrower.dao.BorrowerFinanceDao">
+<sql id="queryDynSql">
+		<if test="start_time !=null and start_time !=''">
+			<![CDATA[and date_format(n.approve_date,'%Y-%m-%d') >= '${start_time}']]>
+		</if>
+		<if test="end_time !=null and end_time !='' ">
+			<![CDATA[and date_format(n.approve_date,'%Y-%m-%d') <= '${end_time}']]>
+		</if>
+	</sql>
+	
+	<sql id="queryDynSql_Wait">
+		<if test="start_time !=null and start_time !=''">
+			<![CDATA[and date_format(n.reg_date,'%Y-%m-%d') >= '${start_time}']]>
+		</if>
+		<if test="end_time !=null and end_time !='' ">
+			<![CDATA[and date_format(n.reg_date,'%Y-%m-%d') <= '${end_time}']]>
+		</if>
+	</sql>
+	
+	<sql id="sqlBeginCount">
+		SELECT COUNT(*) FROM (
+	</sql>
+	
+	<sql id="sqlEndCount">
+		) l
+	</sql>
+	
+	<sql id="sqlCommonFrom">
+		FROM eacc_financinfo n LEFT JOIN eacc_accountinfo m ON n.eacc_no = m.eacc_no 
+	</sql>
+	<sql id="sqlCommonGroup">
+		GROUP BY n.eacc_no,m.cus_type
+	</sql>
+	<sql id="sqlBody">
+		SELECT h.eacc_no,h.cus_type,h.name,SUM(h.on_passage_amt) AS on_passage_amt,SUM(h.on_passage_count) AS on_passage_count,
+			   SUM(h.succ_finance_amt) AS succ_finance_amt,SUM(h.succ_finance_count) AS succ_finance_count
+		FROM
+		(
+			SELECT n.eacc_no,m.cus_type,m.name,SUM(n.financ_amt) AS on_passage_amt ,COUNT(*) AS on_passage_count , 0 AS succ_finance_amt, 0 AS succ_finance_count
+			<include refid="sqlCommonFrom"/>
+			WHERE n.status=#{on_passage_status} 
+			<include refid="queryDynSql_Wait"/>
+			<include refid="sqlCommonGroup"/>
+			
+			UNION ALL
+
+			SELECT n.eacc_no,m.cus_type,m.name,0 AS on_passage_amt ,0 AS on_passage_count , SUM(n.financ_amt) AS succ_finance_amt, COUNT(*) AS succ_finance_count
+			<include refid="sqlCommonFrom"/>
+			WHERE n.status=#{succ_finance_status} 
+			<include refid="queryDynSql"/>
+			<include refid="sqlCommonGroup"/>
+		) h
+		GROUP BY eacc_no,cus_type
+	</sql>
+	
+	<select id="selectList" parameterType="java.util.Map" resultType="java.util.Map">
+		<include refid="sqlBody"/>
+	</select>
+	
+	<select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		<include refid="sqlBeginCount"/>
+		<include refid="sqlBody"/>
+		<include refid="sqlEndCount"/>
+	</select>
+	
+	<select id="pageQuery" parameterType="java.util.Map" resultType="java.util.Map">
+		<include refid="sqlBody"/>
+		limit #{startRow},#{endRow}
+	</select>
+</mapper>

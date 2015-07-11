@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.sharelist.dao.ShareListDao">
+<sql id="queryDynSql">
+		<if test="eacc_no !=null and eacc_no !='' ">
+			and n.eacc_no like '%${eacc_no}%'
+		</if>
+		<if test="acc_type !=null and acc_type !='' ">
+			and n.acc_type like '%${acc_type}%'
+		</if>
+		<if test="prod_id !=null and prod_id !='' ">
+			and n.prod_id like '%${prod_id}%'
+		</if>
+		<if test="prod_type !=null and prod_type !='' ">
+			and m.prod_type like '%${prod_type}%'
+		</if>
+		<if test="var_direction !=null and var_direction !='' ">
+			and n.var_direction like '%${var_direction}%'
+		</if>
+		<if test="start_time !=null and start_time !=''">
+			<![CDATA[and date_format(n.var_date,'%Y-%m-%d') >= '${start_time}']]>
+		</if>
+		<if test="end_time !=null and end_time !='' ">
+			<![CDATA[and date_format(n.var_date,'%Y-%m-%d') <= '${end_time}']]>
+		</if>
+	</sql>
+	
+	<sql id="sqlBeginSelect">
+		select n.*,m.prod_type
+	</sql>
+	
+	<sql id="sqlBeginCount">
+		select count(*)
+	</sql>
+	
+	<sql id="sqlBody">
+		from share_list n left join prod_productinfo m on n.prod_id = m.prod_id
+		where 1=1
+		<include refid="queryDynSql" />
+		order by n.eacc_no,n.prod_id
+	</sql>
+	
+	<select id="selectList" parameterType="java.util.Map" resultType="java.util.Map">
+		<include refid="sqlBeginSelect"/>
+		<include refid="sqlBody"/>
+	</select>
+	
+	<select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		<include refid="sqlBeginCount"/>
+		<include refid="sqlBody"/>
+	</select>
+	
+	<select id="pageQuery" parameterType="java.util.Map" resultType="java.util.Map">
+		<include refid="sqlBeginSelect"/>
+		<include refid="sqlBody"/>
+		limit #{startRow},#{endRow}
+	</select>
+</mapper>

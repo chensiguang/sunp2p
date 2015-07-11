@@ -1,0 +1,9 @@
+@charset "utf-8";  
+
+input.error { border: 1px solid red; }
+span.error {font-weight: bold;color: red; position:absolute; right:27px; top:0px; line-height:30px;}
+
+
+
+
+

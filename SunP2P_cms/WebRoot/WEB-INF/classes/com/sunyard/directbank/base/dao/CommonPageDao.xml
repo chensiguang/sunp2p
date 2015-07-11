@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="public">
+
+	<!-- 公共的sql -->	
+	<sql id="selectByMonth">
+		month(report_date) as 'date_type'
+	</sql>
+	
+	<sql id="selectByYear">
+		year(report_date) as 'date_type'
+	</sql>
+	
+	<sql id="selectByDay">
+		date(report_date) as 'date_type'
+	</sql>
+	
+	<sql id="sqlcountBegin"> select count(*) from ( </sql>
+	
+	<sql id="sqlcountEnd">) h</sql>
+	
+	<sql id="sqllimit">limit #{startRow},#{endRow}</sql>
+</mapper>

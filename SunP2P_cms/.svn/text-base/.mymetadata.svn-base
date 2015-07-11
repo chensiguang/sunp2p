@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="SunP2P_cms"
+  id="myeclipse.1407725899517"
+  context-root="/SunP2P_cms"
+  j2ee-spec="5.0"
+  archive="SunP2P_cms.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

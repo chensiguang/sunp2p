@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.dict.dao.DictInfoDao">
+	<sql id="queryDynSql">
+		<if test="dict_name !=null and dict_name !='' ">
+			and n.prompt like '%${dict_name}%'
+		</if>
+		<if test="dict_desc !=null and dict_desc !='' ">
+			and m.prompt like '%${dict_desc}%'
+		</if>
+		
+	</sql>
+	
+	<sql id="selectCore">
+		 FROM com_dict m LEFT JOIN com_dictmap n ON m.sun_key = n.sun_key where 1=1 
+		 <include refid="queryDynSql"/>
+		 ORDER BY m.sun_key , m.val
+	</sql>
+	<select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) <include refid="selectCore"/>
+	</select>
+	
+	<select id="pageQuery" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT m.*,n.prompt dict_name <include refid="selectCore"/>
+		limit #{startRow},#{endRow}
+	</select>
+	
+	<insert id="insertDictMap" parameterType="java.util.Map">
+		insert into com_dictmap (sun_key,prompt) values (#{sun_key},#{dict_name})
+	</insert>
+	
+	<insert id="insertDict" parameterType="java.util.List">
+		insert into com_dict (sun_key,val,prompt) values 
+		<foreach collection="list" item="item" index="index" separator=",">
+			( #{item.sun_key}, #{item.val}, #{item.dict_desc})
+		</foreach>
+	</insert>
+	
+	<select id="loadDictMapBykey" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) from com_dictmap where sun_key = #{sun_key}
+	</select>
+	
+	<select id="loadDictListByKey" parameterType="java.util.Map" resultType = "java.util.Map">
+		select * from com_dict where sun_key = #{sun_key}
+	</select>
+	
+	<select id="getSpeciDictById" parameterType="java.util.Map" resultType="java.util.Map">
+		select * from com_dict where sun_key = #{sun_key} and val = #{val}
+	</select>
+	
+	<select id="getSpeciDictMapById" parameterType="java.util.Map" resultType="java.lang.String">
+		select prompt from com_dictmap where sun_key = #{sun_key}
+	</select>
+	
+	<update id="updateDictMap" parameterType="java.util.Map">
+		update com_dictmap set prompt = #{dict_name} where sun_key = #{sun_key}
+	</update>
+	
+	<update id="updateDict" parameterType="java.util.Map">
+		update com_dict set prompt = #{prompt} where sun_key = #{sun_key} and val = #{val}
+	</update>
+	
+	<delete id="deleteDict" parameterType="java.util.Map">
+		delete from com_dict where sun_key = #{sun_key} and val = #{val}
+	</delete>
+	
+	<select id="getDictCountByKey" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) from com_dict where sun_key = #{sun_key}
+	</select>
+	
+	<delete id="deleteDictMapBatch" parameterType="java.util.List">
+		delete from com_dictmap where sun_key in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")" >
+			#{item}
+		</foreach>
+	</delete>
+	
+</mapper>

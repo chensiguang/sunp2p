@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.repaymentInfo.dao.RepaymentInfoDao">
+	<insert id="insertP2pRepayBatch" parameterType="java.util.List">
+		insert into batch_prodrepay (repay_num,prod_id,repay_date,repay_amt,status) values 
+		<foreach collection="list" item="item" index="index" separator=",">
+			( #{item.repay_num}, #{item.prod_id}, #{item.repay_date}, #{item.repay_amt}, #{item.status})
+		</foreach>
+	</insert>
+	
+	<insert id="insertFinancingRepayBatch" parameterType="java.util.List">
+		insert into batch_financingrepay (repay_num,financ_id,repay_date,repay_amt,status) values 
+		<foreach collection="list" item="item" index="index" separator=",">
+			( #{item.repay_num}, #{item.financ_id}, #{item.repay_date}, #{item.repay_amt}, #{item.status})
+		</foreach>
+	</insert>
+	
+	<insert id="insertCustDetailRepayBatch" parameterType="java.util.List">
+		insert into batch_repaymentlist (repay_num,eacc_no,loanout_acc,prod_id,repay_amount,repay_val,repay_amt,repay_date,repay_status) values 
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.repay_num}, #{item.eacc_no},#{item.loanout_acc},#{item.prod_id},#{item.repay_amount},#{item.repay_val},#{item.repay_amt},#{item.repay_date}, #{item.repay_status})
+		</foreach>
+	</insert>
+	
+	<select id="selectP2pRepayList" parameterType="java.util.Map" resultType="java.util.Map">
+		select * from batch_prodrepay where real_repay_date = #{real_repay_date} and status = #{status}
+	</select>
+	
+	<select id="selectCustRepayList" parameterType="java.util.Map" resultType="java.util.Map">
+		select * from batch_repaymentlist where real_repay_date = #{real_repay_date} and
+		 repay_status = #{repay_status} and prod_id =#{prod_id} and repay_num = #{repay_num}
+	</select>
+	
+	<update id="updateCustRepayStatus" parameterType="java.util.Map">
+		update batch_repaymentlist set repay_status = #{repay_status} 
+		  where real_repay_date = #{real_repay_date} and repay_status = #{status} and prod_id =#{prod_id} and repay_num = #{repay_num}
+	</update>
+	
+	<update id="updateP2pRepayStatus" parameterType="java.util.Map">
+		update batch_prodrepay set status = #{status} where real_repay_date = #{real_repay_date} and prod_id = #{prod_id} and repay_num = #{repay_num}
+	</update>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.returncode.dao.ReturnCodeDao">
+   <sql id="queryDynSql">
+       <if test="return_code != null and return_code !='' " >
+           AND return_code LIKE '%${return_code}%'
+       </if>
+       <if test="return_msg != null and return_msg !=''">
+           AND return_msg LIKE '%${return_msg}%'
+       </if>
+      </sql>
+      
+     <select id="select" resultType="com.sunyard.directbank.returncode.model.ReturnCode">
+         SELECT *  FROM com_returnmsg  WHERE 1=1 
+         <include refid = "queryDynSql"/> 
+     </select>
+       
+     <select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) from com_returnmsg where 1=1
+		<include refid="queryDynSql"/>
+	 </select>
+	
+	 <select id="pageQuery" parameterType="java.util.Map" resultType="com.sunyard.directbank.returncode.model.ReturnCode">
+		select * from com_returnmsg where 1=1 
+		 <include refid="queryDynSql" />
+		limit #{startRow},#{endRow}		
+	 </select>
+	 
+	 <select id="loadRCodeById" parameterType="java.lang.String" resultType="com.sunyard.directbank.returncode.model.ReturnCode">
+		select * from com_returnmsg where return_code = #{return_code}
+	 </select>
+	 
+	 <insert id="insert" parameterType="com.sunyard.directbank.returncode.model.ReturnCode" >
+		insert into com_returnmsg
+			( return_code, return_msg)
+		values
+			( #{return_code},#{return_msg})
+	  </insert>
+	  
+	  <update id="update" parameterType="com.sunyard.directbank.returncode.model.ReturnCode">
+		update com_returnmsg set 
+			   return_msg = #{return_msg}
+	    where return_code = #{return_code}
+	  </update>	
+	  
+	   <delete id="deleteBatch" parameterType="java.util.List">
+		delete from com_returnmsg where return_code in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")" >
+			#{item}
+		</foreach>
+	  </delete>
+ </mapper>

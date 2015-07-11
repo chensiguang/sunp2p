@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!-- 
+====================================================================== 
+     xsgj    
+     description
+                   
+     Yelj                                                                
+====================================================================== 
+-->
+<project name="SunP2P_cms" default="build-db-war" basedir="..">
+
+	<property name="deploy.dir" value="deploy" />
+
+	<property name="src.dir" value="src" />
+	<property name="web.dir" value="WebRoot" />
+	<property name="classes.dir" value="${web.dir}/WEB-INF/classes" />
+	<property name="lib.dir" value="${web.dir}/WEB-INF/lib" />
+	<property name="db.war.file" value="deploy/SunP2P_cms.war" />
+	
+
+	
+	<!--初始化命令-->                                    
+	  <target name="init">                                    
+	    <!-- Create the time stamp -->                                    
+	    <tstamp/>                                    
+	    <!-- Create the build directory structure used by compile -->     
+	  	<delete dir="${web.dir}/WEB-INF/classes"/>       
+	    <mkdir dir="${web.dir}/WEB-INF/classes"/>                                    
+	  </target>                            
+	
+	  <path id="lib.path">
+		 <fileset dir="${lib.dir}">
+			 <include name="**/*.jar" />
+		 </fileset>
+		
+	  <!--
+	  	 <fileset dir="C:/developTools/apache-tomcat/lib">
+	  				 <include name="*.jar"/>
+	     </fileset>
+	  -->
+		
+	  	 <fileset dir="C:/Tomcat6/lib">
+	  		<include name="*.jar"/>
+	  	  </fileset>
+	  	
+	  	
+	  </path>
+
+	  <!--编译-->                                    
+	  <target name="compile" depends="init"                                    
+	        description="compile the source " >                                    
+	    <!-- Compile the java code from ${src} into ${build} -->                                    
+	    <!--javac标签用来设置编译程序的参数，srcdir为java文件路径，destdir为编译后class文件的保存路径。-->
+	    <javac srcdir="${src.dir}" destdir="${classes.dir}" encoding="UTF-8" includeantruntime="on" debug="true"> 
+	       <classpath refid="lib.path"></classpath>  
+	    </javac>
+	  	<copy todir="${classes.dir}">  
+	  	        <fileset dir="${src.dir}">  
+	  	                <exclude name="**/*.java" />  
+	  	         </fileset>  
+	  	</copy>  
+	  </target>
+
+	<target name="build-db-war" description="" depends="compile">
+		<delete file="${db.war.file}" />
+		<jar destfile="${db.war.file}">
+			<fileset dir="${web.dir}" includes="**">
+			</fileset>
+		</jar>
+	</target>
+
+</project>

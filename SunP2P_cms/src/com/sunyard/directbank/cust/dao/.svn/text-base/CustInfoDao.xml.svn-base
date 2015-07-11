@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.cust.dao.CustInfoDao">
+	<sql id="queryDynSql">
+		<if test="eacc_no !=null and eacc_no !='' ">
+			and eacc_no like '%${eacc_no}%'
+		</if>
+		<if test="name !=null and name !='' ">
+			and name like '%${name}%'
+		</if>
+		<if test="mobile !=null and mobile !='' ">
+			and mobile like '%${mobile}%'
+		</if>
+		<if test="start_time !=null and start_time !=''">
+			<![CDATA[and date_format(reg_time,'%Y-%m-%d') >= '${start_time}']]>
+		</if>
+		<if test="end_time !=null and end_time !='' ">
+			<![CDATA[and date_format(reg_time,'%Y-%m-%d') <= '${end_time}']]>
+		</if>
+	</sql>
+	
+	<select id="selectList" parameterType="java.util.Map" resultType="java.util.Map">
+		select * from eacc_accountinfo where 1=1 
+		<include refid="queryDynSql" />
+		order by reg_time,eacc_no
+	</select>
+	
+	<select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) from eacc_accountinfo where 1=1
+		<include refid="queryDynSql"/>
+	</select>
+	
+	<select id="pageQuery" parameterType="java.util.Map" resultType="java.util.Map">
+		select * from eacc_accountinfo where 1=1 
+		<include refid="queryDynSql" />
+		order by reg_time,eacc_no
+		limit #{startRow},#{endRow}
+	</select>
+	
+</mapper>

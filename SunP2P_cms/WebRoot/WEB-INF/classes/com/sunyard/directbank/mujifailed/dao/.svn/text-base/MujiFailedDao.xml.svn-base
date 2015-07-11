@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.mujifailed.dao.MujiFailedDao">
+
+	<!-- 查询产品份额表 -->
+	<select id="selectShareInall" parameterType="java.lang.Integer" resultType="java.util.Map">
+		SELECT eacc_no,prod_id,acc_type,account,tot_vol,use_vol,tot_val,payed_val,frozen_vol,long_frozen_vol,last_date,transfer_vol
+		FROM share_inall 
+		WHERE prod_id = #{prod_id}
+	</select>
+	
+	<!-- 添加份额明细 -->
+	<insert id="insertShareList" parameterType="java.util.List">
+		INSERT INTO share_list(eacc_no,acc_type,account,prod_id,system_date,var_date,var_time,var_direction,var_value,var_cause)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+        	(#{item.eacc_no},#{item.acc_type},#{item.account},#{item.prod_id},
+        	(SELECT DATE_FORMAT(param_value,'%Y-%m-%d')param_value FROM com_param WHERE param_id=#{item.system_date}),
+        	DATE_FORMAT(NOW(),'%Y-%m-%d'), DATE_FORMAT(NOW(), '%T'),#{item.var_direction},#{item.use_vol},#{item.var_cause})
+    	</foreach>
+	</insert>
+	
+	<!-- 电子账户资金进出明细表，记录流水 -->
+	<insert id="insertAmtList" parameterType="java.util.List">
+		INSERT INTO eacc_accountamtlist(serial_id,trans_code,system_date,trans_date,trans_time,eacc_no,
+			amt_type,amt_channel,oppo_acc,amt)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+        	(#{item.serial_id},#{item.trans_code},
+        	(SELECT DATE_FORMAT(param_value,'%Y-%m-%d')param_value FROM com_param WHERE param_id=#{item.system_date}),
+        	DATE_FORMAT(NOW(),'%Y-%m-%d'), DATE_FORMAT(NOW(), '%T'),#{item.eacc_no},#{item.amt_type},
+        	#{item.amt_channel},#{item.debit_account},#{item.use_vol})
+    	</foreach>
+	</insert>
+	
+	<!-- 查询某一条在募集期的募集信息 -->
+	<select id="getById" parameterType="java.lang.Integer" resultType="java.util.Map">
+		SELECT prod_id,prod_name,total_limit,saled_limit,debit_account 
+		FROM prod_productinfo 
+		WHERE prod_id = #{prod_id} AND (prod_state = '5' OR prod_state = '0')
+	</select>
+	
+	<!-- 更新产品份额表，将份额清零 -->
+	<update id="updateShareInall" parameterType="java.lang.Integer" >
+		UPDATE share_inall 
+		SET tot_vol=0,use_vol=0,last_date=DATE_FORMAT(NOW(),'%Y-%m-%d') 
+		WHERE prod_id = #{prod_id}
+	</update>
+	
+	<!-- 更新客户电子账号信息登记表，修改余额 -->
+	<update id="updateEaccAcct" parameterType="java.util.Map" >
+		UPDATE eacc_accountinfo 
+		SET n_balance=n_balance+#{use_vol},t_balance=t_balance+#{use_vol} 
+		WHERE eacc_no = #{eacc_no}
+	</update>
+	
+	<!-- 更新产品管理表，将产品状态置为失败 -->
+	<update id="updateProduct" >
+		UPDATE prod_productinfo 
+		SET prod_state=#{prod_state} 
+		WHERE prod_id = #{prod_id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.sysparam.dao.SysParamDao">
+ 
+   <!--  按条件查询系统参数 -->
+   
+	  <sql id="queryDynSql">
+       <if test="param_type != null and param_type !='' " >
+           AND param_type LIKE '%${param_type}%'
+       </if>
+       <if test="value_name != null and value_name !=''">
+           AND value_name LIKE '%${value_name}%'
+       </if>
+      </sql>
+      
+      <select id="select" resultType="com.sunyard.directbank.sysparam.model.SysParam">
+         SELECT *  FROM com_param  WHERE 1=1 
+         <include refid = "queryDynSql"/> 
+     </select>
+     
+     <select id="loadById" parameterType="java.lang.String" resultType="com.sunyard.directbank.sysparam.model.SysParam">
+		select * from com_param where param_id = #{param_id}
+	 </select>
+       
+     <select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) from com_param where 1=1
+		<include refid="queryDynSql"/>
+	 </select>
+	
+	 <select id="pageQuery" parameterType="java.util.Map" resultType="com.sunyard.directbank.sysparam.model.SysParam">
+		select * from com_param where 1=1 
+		 <include refid="queryDynSql" />
+		limit #{startRow},#{endRow}		
+	 </select>
+	 
+	  <insert id="insert" parameterType="com.sunyard.directbank.sysparam.model.SysParam" >
+		insert into com_param
+			( param_id, param_name, param_value, prod_id,value_name, param_type,modi_flag,reserve1)
+			  
+		values
+			( #{param_id},#{param_name},#{param_value},#{prod_id},#{value_name},#{param_type},
+			  #{modi_flag},#{reserve1})
+	  </insert>
+	
+      <update id="update" parameterType="com.sunyard.directbank.sysparam.model.SysParam">
+		update com_param set 
+			 param_type = #{param_type},  prod_id = #{prod_id},value_name = #{value_name},
+			 param_value = #{param_value},modi_flag = #{modi_flag},   reserve1 = #{reserve1}
+		where param_id = #{param_id}
+	  </update>	
+	  
+	  <delete id="deleteAll" parameterType="com.sunyard.directbank.sysparam.model.SysParam">
+		delete from com_param where 1=1
+		<include refid="queryDynSql" />
+	  </delete>
+	
+	  <delete id="deleteBatch" parameterType="java.util.List">
+		delete from com_param where param_id in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")" >
+			#{item}
+		</foreach>
+	  </delete>
+    
+</mapper>

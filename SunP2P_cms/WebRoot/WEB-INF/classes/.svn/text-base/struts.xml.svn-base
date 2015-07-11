@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<constant name="struts.enable.DynamicMethodInvocation" value="false" />
+	<constant name="struts.devMode" value="false" />
+	
+	<package name="aciton" namespace="/" extends="struts-default">
+		<interceptors>
+			<interceptor name="insertOperLog" class="com.sunyard.directbank.Interceptor.OperLogInterceptor"></interceptor>
+			<interceptor name="checkPrivilege" class="com.sunyard.directbank.Interceptor.CheckPrivilegeInterceptor"></interceptor>
+			<interceptor name="exceptionPrivilege" class="com.sunyard.directbank.Interceptor.ExceptionInterceptor"></interceptor>
+			<interceptor-stack name="directBankStack">
+				<interceptor-ref name="checkPrivilege"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<interceptor-ref name="modelDriven"></interceptor-ref>
+				<interceptor-ref name="exceptionPrivilege"></interceptor-ref>
+				<interceptor-ref name="insertOperLog"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+
+		<default-interceptor-ref name="directBankStack"></default-interceptor-ref>
+		
+		<global-results>
+			<result name="success">/jsp/public/success.jsp</result>
+			<result name="error">/jsp/public/error.jsp</result>
+			<result name="noOKError">/jsp/public/noOKError.jsp</result>
+			<result name="loginUI">/jsp/home/login.jsp</result>
+			<result name="noPrivilegeError">/jsp/public/noPrivilegeError.jsp</result>
+			<result name="syssuccess">/jsp/home/success.jsp</result>
+		</global-results>
+
+		<global-exception-mappings>
+			<exception-mapping exception="org.springframework.dao.DataAccessException" result="error" />
+			<exception-mapping exception="java.lang.Exception" result="error" /> 
+		</global-exception-mappings>
+		
+		<!-- 系统参数管理 -->
+		<action name="sysParamAction_*" class="sysParamAction" method="{1}">
+			<result name="query">/jsp/sysParam/syspara_query.jsp</result>
+			<result name="add">/jsp/sysParam/syspara_add.jsp</result>
+			<result name="modi">/jsp/sysParam/syspara_modi.jsp</result>
+	    </action>
+		
+		<!-- 数据字典管理 -->
+		<action name="dictInfoAction_*" class="dictInfoAction" method="{1}">
+			<result name="query">/jsp/dictInfo/dict_query.jsp</result>
+			<result name="add">/jsp/dictInfo/dict_add.jsp</result>
+			<result name="modi">/jsp/dictInfo/dict_modi.jsp</result>
+		</action> 
+		
+		<!-- 产品信息管理 -->
+		<action name="prodInfoAction_*" class="prodInfoAction" method="{1}">
+			<result name="query">/jsp/prodInfo/prod_query.jsp</result>
+			<result name="add">/jsp/prodInfo/prod_add.jsp</result>
+			<result name="modi">/jsp/prodInfo/prod_modi.jsp</result>
+            <result name="check">/jsp/prodInfo/prod_check.jsp</result>
+            <result name="addModel">/jsp/prodInfo/prod_add_model.jsp</result>
+	    </action>
+	    
+		<!-- 产品清算日管理 -->
+		<action name="batchDateAction_*" class="batchDateAction" method="{1}">
+			<result name="query">/jsp/batchDate/batchdate_query.jsp</result>
+			<result name="add">/jsp/batchDate/batchdate_add.jsp</result>
+		</action>
+		
+
+		<!-- 基金产品管理 -->
+		<action name="fundInfoAction_*" class="fundInfoAction" method="{1}">
+			<result name="query">/jsp/fundInfo/fund_query.jsp</result>
+			<result name="add">/jsp/fundInfo/fund_add.jsp</result>
+			<result name="modi">/jsp/fundInfo/fund_modi.jsp</result>
+			<result name="check">/jsp/fundInfo/fund_check.jsp</result>
+		</action> 
+		
+		<!-- p2p产品管理 -->
+		<action name="p2pInfoAction_*" class="p2pInfoAction" method="{1}">
+			<result name="query">/jsp/p2pInfo/p2p_query.jsp</result>
+			<result name="add">/jsp/p2pInfo/p2p_add.jsp</result>
+			<result name="modi">/jsp/p2pInfo/p2p_modi.jsp</result>
+			<result name="check">/jsp/p2pInfo/p2p_check.jsp</result>
+		</action>
+		
+		<!-- 注册用户信息查询 -->
+		<action name="custInfoAction_*" class="custInfoAction" method="{1}">
+			<result name="query">/jsp/custInfo/cust_query.jsp</result>
+		</action>
+		
+		<!-- 交易流水信息查询 -->
+		<action name="transInfoAction_*" class="transInfoAction" method="{1}">
+			<result name="query">/jsp/transInfo/trans_query.jsp</result>
+		</action>
+		
+		<!-- 用户份额查询 -->
+		<action name="shareInallAction_*" class="shareInallAction" method="{1}">
+			<result name="query">/jsp/shareinall/shareinall_query.jsp</result>
+		</action>
+		
+		<!-- 用户明细份额查询 -->
+		<action name="shareListAction_*" class="shareListAction" method="{1}">
+			<result name="query">/jsp/sharelist/sharelist_query.jsp</result>
+		</action>
+		
+		<!-- 系统运行日志查询 -->
+		<action name="sysLogAction_*" class="sysLogAction" method="{1}">
+			<result name="query">/jsp/sysLog/run_query.jsp</result>
+		</action>
+		
+		<!-- 系统用户操作日志查询 -->
+		<action name="operLogAction_*" class="operLogAction" method="{1}">
+			<result name="query">/jsp/sysLog/oper_query.jsp</result>
+		</action>
+		
+		<!--产品资金交易统计 -->
+		<action name="capitalInfoAction_*" class="capitalInfoAction" method="{1}">
+			<result name="query">/jsp/capital/capital_query.jsp</result>
+		</action>
+		
+		<!--资金进出统计 -->
+		<action name="amtListAction_*" class="amtListAction" method="{1}">
+			<result name="query">/jsp/capital/flow_query.jsp</result>
+		</action>
+		
+		<!--开户量统计 -->
+		<action name="eacCountAction_*" class="eacCountAction" method="{1}">
+			<result name="query">/jsp/eaccount/eaccount_query.jsp</result>
+		</action>
+		
+		<!--客户经理融资统计 -->
+		<action name="managerFinanceAction_*" class="managerFinanceAction" method="{1}">
+			<result name="query">/jsp/manager/manager_query.jsp</result>
+		</action>
+		
+		<!--借款人融资信用统计 -->
+		<action name="borrowerFinanceAction_*" class="borrowerFinanceAction" method="{1}">
+			<result name="query">/jsp/borrower/borrower_query.jsp</result>
+		</action>
+		
+		<!-- 角色管理 -->
+		<action name="roleAction_*" class="roleAction" method="{1}">
+			<result name="selectRoles">/jsp/role/roles.jsp</result>
+			<result name="addRoleUI">/jsp/role/role_add.jsp</result>
+			<result name="updateRoleUI">/jsp/role/role_update.jsp</result>
+			<result name="privilegeDistbUI">/jsp/role/privilege_distb.jsp</result>
+			<result name="toSelectRoles" type="redirectAction">roleAction_selectAllRoles</result>
+		</action>
+		
+		<!-- 机构管理 -->
+		<action name="departmentAction_*" class="departmentAction" method="{1}">
+			<result name="selectDepartments">/jsp/department/departments.jsp</result>
+			<result name="addDepartmentUI">/jsp/department/department_add.jsp</result>
+			<result name="updateDepartmentUI">/jsp/department/department_update.jsp</result>
+			<result name="toSelectDepartments" type="redirectAction">departmentAction_selectAllDepartments?parent_id=${parent_id}</result>
+		</action>
+		
+		<!-- 用户管理 -->
+		<action name="userAction_*" class="userAction" method="{1}">
+			<result name="selectUsers">/jsp/user/users.jsp</result>
+			<result name="addUserUI">/jsp/user/user_add.jsp</result>
+			<result name="updateUserUI">/jsp/user/user_update.jsp</result>
+			<result name="updatePwdUI">/jsp/user/pwd_update.jsp</result>
+			<result name="roleDistbUI">/jsp/user/role_distb.jsp</result>
+			<result name="toSelectUsers" type="redirectAction">userAction_selectAllUsers</result>
+		</action>
+		
+		<!-- 权限管理 -->
+		<action name="privilegeAction_*" class="privilegeAction" method="{1}">
+			<result name="selectPrivileges">/jsp/privilege/privileges.jsp</result>
+			<result name="addPrivilegeUI">/jsp/privilege/privilege_add.jsp</result>
+			<result name="updatePrivilegeUI">/jsp/privilege/privilege_update.jsp</result>
+			<result name="toSelectPrivileges" type="redirectAction">privilegeAction_selectAllPrivileges</result>
+		</action>
+		
+		<!-- 返回码管理 -->
+		<action name="returnCodeAction_*" class="returnCodeAction" method="{1}">
+		    <result name="query">/jsp/code/code_query.jsp</result>
+			<result name="add">/jsp/code/code_add.jsp</result>
+			<result name="modi">/jsp/code/code_modi.jsp</result>
+		</action>
+		
+		<!-- 用户登录 -->
+		<action name="homeAction_*" class="homeAction" method="{1}">
+			<result name="loginUI">/jsp/home/login.jsp</result>
+			<result name="toIndex">/jsp/home/index.jsp</result>
+		</action>
+		
+		<!-- 客户融资信息管理 -->
+		<action name="financeAction_*" class="financeAction" method="{1}">
+			<result name="selectFinances">/jsp/finance/finance.jsp</result>
+			<result name="addFinancesUI">/jsp/finance/finance_detail.jsp</result>
+			<result name="approveUI">/jsp/finance/finance_approveUI.jsp</result>
+			<result name="refuseUI">/jsp/finance/finance_refuseUI.jsp</result>
+		</action>
+		
+		<!-- 账户流水查询 -->
+		<action name="transAccreqAction_*" class="transAccreqAction" method="{1}">
+			<result name="transAccreq">/jsp/transInfo/transAccreq.jsp</result>
+		</action>
+		
+		<!-- 冻结解冻流水查询 -->
+		<action name="transFrozenAction_*" class="transFrozenAction" method="{1}">
+			<result name="transFrozen">/jsp/transInfo/transFrozen.jsp</result>
+		</action>
+		
+		<!-- p2p产品还款管理-->
+		<action name="batchP2pAction_*" class="batchP2pAction" method="{1}">
+			<result name="query">/jsp/batchp2p/batchp2p_query.jsp</result>
+		</action>
+		
+		<!-- p2p产品成立 -->
+		<action name="p2pEstablishAction_*" class="p2pEstablishAction" method="{1}">
+		</action>
+		
+		<!-- p2p批量还款 -->
+		<action name="p2pBatchRepaymentAction_*" class="p2pBatchRepaymentAction" method="{1}">
+		</action>
+		
+		<!-- 数据汇总-->
+		<action name="sumDataAction_*" class="sumDataAction" method="{1}">
+		</action>
+		
+		<!-- 清算流程管理 -->
+		<action name="batchOrderAction_*" class="batchOrderAction" method="{1}">
+			<result name="batchOrder">/jsp/batchOrder/batchOrder.jsp</result>
+			<result name="addBatchOrderUI">/jsp/batchOrder/batchOrder_add.jsp</result>
+			<result name="updateBatchOrderUI">/jsp/batchOrder/batchOrder_update.jsp</result>
+		</action>
+		
+		<!-- 强制产品募集失败 -->
+		<action name="mujiFailedAction_*" class="mujiFailedAction" method="{1}">
+			<result name="mujiUI">/jsp/mujifailed/mujifailed.jsp</result>
+		</action>
+		
+		<!-- 文件归档 -->
+		<action name="filingAction_*" class="filingAction" method="{1}">
+			<result name="filing">/jsp/home/filing.jsp</result>
+		</action>
+		
+		<!-- 活动信息管理 -->
+		<action name="comActiveAction_*" class="comActiveAction" method="{1}">
+		    <result name="comActive">/jsp/comActive/comActive.jsp</result>
+		    <result name="addComActiveUI">/jsp/comActive/comActive_add.jsp</result>
+		    <result name="updateComActiveUI">/jsp/comActive/comActive_update.jsp</result>
+		    <result name="toComActive" type="redirectAction">comActiveAction_selectAllActive </result>
+	    </action>
+
+		<!-- 产品交易状态管理 -->
+		<action name="transStatusAction_*" class="transStatusAction" method="{1}">
+			<result name="query">/jsp/transStatus/transStatus_query.jsp</result>
+		    <result name="addUI">/jsp/transStatus/transStatus_addUI.jsp</result>
+		    <result name="updateUI" >/jsp/transStatus/transStatus_updateUI.jsp</result> 
+		</action>
+		
+		<!-- 日终清算 -->
+		<action name="batchDayEndAction_*" class="batchDayEndAction" method="{1}">
+			<result name="batchDayEnd">/jsp/batchDayEnd/batchDayEnd.jsp</result>
+		</action>
+		
+		<!-- 日终清算自动化 -->
+		<action name="batchAutoAction_*" class="batchAutoAction" method="{1}">
+			<result name="batchAuto" type="redirectAction" >batchDayEndAction_batchDayEnd</result>
+		</action>
+		
+	   <!-- 抵用券管理 -->
+		<action name="voucherAction_*" class="voucherAction" method="{1}">
+			<result name="query">/jsp/voucher/voucher_query.jsp</result>
+			<result name="addUI">/jsp/voucher/voucher_addUI.jsp</result>
+			<result name="updateUI" >/jsp/voucher/voucher_updateUI.jsp</result>  
+		</action>
+		
+	   <!-- 用户信息审核 -->
+		<action name="userApproveAction_*" class="userApproveAction" method="{1}">
+			<result name="query">/jsp/userapprove/user_info.jsp</result>
+			<result name="approving">/jsp/userapprove/user_details.jsp</result>
+		</action>
+		
+	    <!-- 清算开始 -->
+		<action name="t00038_*" class="t00038" method="{1}">
+		</action>
+		
+	    <!-- 清算结束 -->
+		<action name="t00039_*" class="t00039" method="{1}">
+		</action>
+		
+	    <!-- 债权转让失效 -->
+		<action name="t00044_*" class="t00044" method="{1}">
+		</action>
+		
+	    <!-- 产品终止 -->
+		<action name="t00045_*" class="t00045" method="{1}">
+		</action>
+		
+	    <!-- 文件归档 -->
+		<action name="t00047_*" class="t00047" method="{1}">
+		</action>
+		
+	</package>
+</struts>

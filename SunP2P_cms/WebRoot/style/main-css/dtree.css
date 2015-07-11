@@ -1,0 +1,67 @@
+/*--------------------------------------------------|
+| dTree 2.05 | www.destroydrop.com/javascript/tree/ |
+|---------------------------------------------------|
+| Copyright (c) 2002-2003 Geir Landr锟�             |
+|--------------------------------------------------*/
+
+.dtree {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #666;
+	white-space: nowrap;
+	margin-top:-31px;
+	background:#fff;
+}
+.dtree img {
+	border: 0px;
+	vertical-align: middle;
+}
+.dtree a {
+	color: #333;
+	text-decoration: none;
+}
+.dtree a.node, .dtree a.nodeSel {
+	white-space: nowrap;
+	padding: 1px 2px 1px 2px;
+}
+.dtree a.node:hover, .dtree a.nodeSel:hover {
+	color: #f37113;
+	text-decoration: none;
+}
+.dtree a.nodeSel {
+	color: #f37113;
+	/* background-color: #c0d2ec; */
+}
+.dtree .clip {
+	overflow: hidden;
+}
+.dTreeNode_dept {
+	line-height:30px;
+	padding-left:35px;
+}
+.dTreeNode {
+	line-height:30px;
+	padding-left:38px;
+	background-color:#e6e6e6;
+	border-top: solid 1px #ddd;
+	background-image:url(../../images/tree-arrow-close.gif);
+	background-repeat:no-repeat;
+	background-position:16px 7px;
+	
+}
+
+.dTreeNodeOn {
+	background-image:url(../../images/tree-arrow-open.gif);
+}
+
+.dTreeNode_ls {
+	line-height:30px;
+	padding-left:38px;
+	background-image:url(../../images/tree-join.gif);
+	background-repeat:no-repeat;
+	background-position:20px 0px;
+}
+
+.dTreeNode_ls:first {
+	border-top: solid 1px #ddd;
+}

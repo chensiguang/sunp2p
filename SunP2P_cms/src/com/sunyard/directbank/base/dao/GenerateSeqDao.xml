@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.base.dao.GenerateSeqDao">
+    <select id="getSeq" parameterType="java.lang.String" resultType="java.lang.String">
+       <![CDATA[
+        SELECT CASE WHEN curr_value+inc<max_value THEN curr_value+inc
+        ELSE min_value END seq FROM com_sequence WHERE
+        sequence_id = #{seqCode}
+       ]]>
+    </select>
+
+    <update id="updateSeq">
+        update com_sequence set curr_value = #{curr_code} where sequence_id = #{seqCode}
+    </update>
+</mapper>

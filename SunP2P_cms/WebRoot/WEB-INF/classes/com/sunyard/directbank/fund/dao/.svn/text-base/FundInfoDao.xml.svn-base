@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.fund.dao.FundInfoDao">
+	<sql id="queryDynSql">
+		<if test="prod_id !=null">
+			and prod_id like '%${prod_id}%'
+		</if>
+		<if test="prod_name !=null and prod_name !='' ">
+			and prod_name like '%${prod_name}%'
+		</if>
+		<if test="prod_type !=null and prod_type !='' ">
+			and prod_type like '%${prod_type}%'
+		</if>
+		<if test="hpage_promoted !=null and hpage_promoted !=''">
+			and hpage_promoted like '%${hpage_promoted}%'
+		</if>
+		<if test="prod_state !=null and prod_state !='' ">
+			and prod_state like '%${prod_state}%'
+		</if>
+		<if test="issue_state !=null and issue_state !='' ">
+			and issue_state like '%${issue_state}%'
+		</if>
+		<if test="risk_lvl !=null and risk_lvl !='' ">
+			and risk_lvl like '%${risk_lvl}%'
+		</if>
+	</sql>
+	
+	<select id="selectList" parameterType="com.sunyard.directbank.fund.model.FundInfo" resultType="com.sunyard.directbank.fund.model.FundInfo">
+		select * from prod_fund_tb where 1=1 
+		<include refid="queryDynSql" />
+	</select>
+	
+	<select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) from prod_fund_tb where 1=1
+		<include refid="queryDynSql"/>
+	</select>
+	
+	<select id="pageQuery" parameterType="java.util.Map" resultType="com.sunyard.directbank.fund.model.FundInfo">
+		select * from prod_fund_tb where 1=1 
+		<include refid="queryDynSql" />
+		limit #{startRow},#{endRow}
+	</select>
+	
+	<insert id="insert" parameterType="com.sunyard.directbank.fund.model.FundInfo" >
+		insert into prod_fund_tb
+			( prod_id, prod_name, prod_type, issue_total, remaining, saled,currency,value_date,
+			  expire_date,ist_year,lowest_limit,risk_lvl,prod_state,prod_readme,prod_publisher,prod_checker,
+			  hpage_promoted,ist_7day,net_worth,net_date,addition_limit,quota_control,web_total,app_total,
+			  weixin_total,sale_channel_control,sale_channel,issue_state,prod_typist
+			)
+		values
+			( #{prod_id},#{prod_name},#{prod_type},#{issue_total},#{remaining},#{saled},#{currency},#{value_date},
+		 	  #{expire_date},#{ist_year},#{lowest_limit},#{risk_lvl},#{prod_state},#{prod_readme},#{prod_publisher},#{prod_checker},
+		 	  #{hpage_promoted},#{ist_7day},#{net_worth},#{net_date},#{addition_limit},#{quota_control},#{web_total},#{app_total},
+		 	  #{weixin_total},#{sale_channel_control},#{sale_channel},#{issue_state},#{prod_typist} 
+		 	)
+	</insert>
+
+	<select id="loadById" parameterType="java.lang.Long" resultType="com.sunyard.directbank.fund.model.FundInfo">
+		select * from prod_fund_tb where prod_id = #{prod_id}
+	</select>
+	
+	<delete id="deleteAll" parameterType="com.sunyard.directbank.fund.model.FundInfo">
+		delete from prod_fund_tb where 1=1
+		<include refid="queryDynSql" />
+	</delete>
+	
+	<delete id="deleteBatch" parameterType="java.util.List">
+		delete from prod_fund_tb where prod_id in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")" >
+			#{item}
+		</foreach>
+	</delete>
+	
+	<update id="update" parameterType="com.sunyard.directbank.fund.model.FundInfo">
+		update prod_fund_tb set 
+		prod_name = #{prod_name}, prod_type = #{prod_type}, issue_total = #{issue_total}, remaining = #{remaining},
+		saled = #{saled}, currency = #{currency}, value_date = #{value_date}, expire_date = #{expire_date},
+		ist_year = #{ist_year}, lowest_limit = #{lowest_limit}, risk_lvl = #{risk_lvl}, prod_state = #{prod_state},
+		prod_readme = #{prod_readme}, prod_publisher = #{prod_publisher}, prod_checker = #{prod_checker},hpage_promoted = #{hpage_promoted},
+		ist_7day = #{ist_7day}, net_worth = #{net_worth}, net_date = #{net_date}, addition_limit = #{addition_limit},
+		quota_control = #{quota_control}, web_total = #{web_total}, app_total = #{app_total}, weixin_total = #{weixin_total},
+		sale_channel_control = #{sale_channel_control}, sale_channel = #{sale_channel}, issue_state = #{issue_state}, prod_typist = #{prod_typist} 
+		
+		where prod_id = #{prod_id}
+	</update>
+	
+	<update id="updateIssueState" parameterType="com.sunyard.directbank.fund.model.FundInfo">
+		update prod_fund_tb set issue_state = #{issue_state} where prod_id = #{prod_id}
+	</update>
+</mapper>

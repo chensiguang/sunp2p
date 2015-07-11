@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.transfrozen.dao.TransFrozenDao">
+	<!-- 查询条件 -->
+	<sql id="queryDynSql">
+		<if test="frozen_serial !=null and frozen_serial !='' ">
+			AND fr.frozen_serial LIKE '%${frozen_serial}%'
+		</if>
+		<if test="status !=null and status !='' ">
+			AND fr.status LIKE '%${status}%'
+		</if>
+		<if test="frozen_type !=null and frozen_type !='' ">
+			AND fr.frozen_type LIKE '%${frozen_type}%'
+		</if>
+		<if test="start_time !=null and start_time !=''">
+			<![CDATA[AND DATE_FORMAT(fr.frozen_date,'%Y-%m-%d') >= '${start_time}']]>
+		</if>
+		<if test="end_time !=null and end_time !='' ">
+			<![CDATA[AND DATE_FORMAT(fr.frozen_date,'%Y-%m-%d') <= '${end_time}']]>
+		</if>
+	</sql>
+	
+	<!-- 查询字段 -->
+	<sql id="sqlBeginSelect">
+		SELECT fr.frozen_serial, fr.status,fr.frozen_date,fr.unfrozen_date,fr.frozen_type,fr.frozen_amt,
+			fr.frozen_cause,fr.eacc_no,fr.cus_type,ac.name,fr.account,fr.channel,fr.unfrozen_serial  
+	</sql>
+	
+	<!-- 查询统计 -->
+	<sql id="sqlBeginCount">
+		select count(*)
+	</sql>
+	
+	<!-- 查询表 -->
+	<sql id="sqlBody">
+		FROM trans_frozen fr LEFT JOIN eacc_accountinfo ac ON fr.eacc_no=ac.eacc_no
+		WHERE 1=1
+		<include refid="queryDynSql" />
+	</sql>
+	
+	<!-- 查询所有记录，供下载使用 -->
+	<select id="selectList" parameterType="java.util.Map" resultType="java.util.Map">
+		<include refid="sqlBeginSelect"/>
+		<include refid="sqlBody"/>
+	</select>
+	
+	<!-- 查询送记录数 -->
+	<select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		<include refid="sqlBeginCount"/>
+		<include refid="sqlBody"/>
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="pageQuery" parameterType="java.util.Map" resultType="java.util.Map">
+		<include refid="sqlBeginSelect"/>
+		<include refid="sqlBody"/>
+		LIMIT #{startRow},#{endRow}
+	</select>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.comActive.dao.ComActiveDao">
+
+	<!-- 查询记录信息总数 -->
+	<select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM com_active com WHERE 1=1
+		<include refid="queryDynSql"/>
+	</select>
+	
+	<!-- 查询清算信息 -->
+	<select id="pageQuery" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT * FROM com_active com WHERE 1 = 1
+		<include refid="queryDynSql"/>
+		LIMIT #{startRow}, #{rows}
+	</select>
+	
+	<!-- 添加功能 -->
+	<insert id="save" parameterType="java.util.Map">
+		INSERT INTO com_active(trans_id,trans_name,start_amt,score_way,score_percent,max_score,score,voucher_amt,amt,enable_flag,remark)
+		VALUES(#{trans_id},#{trans_name},#{start_amt},#{score_way},#{score_percent},#{max_score},#{score},#{voucher_amt},#{amt},#{enable_flag},#{remark}) 
+	</insert>
+	
+	<!-- 查询某一条清算信息 -->
+	<select id="getById" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT * FROM com_active WHERE trans_id = #{trans_id} AND start_amt = #{start_amt} AND score_way = #{score_way}
+	</select>
+	
+	<!-- 修改功能 -->
+	<update id="update" parameterType="java.util.Map">
+		UPDATE com_active SET trans_name=#{trans_name},score_percent=#{score_percent},max_score=#{max_score},
+			score=#{score},voucher_amt=#{voucher_amt},amt=#{amt},enable_flag=#{enable_flag},remark=#{remark} 
+		WHERE trans_id=#{trans_id} AND start_amt=#{start_amt} AND score_way=#{score_way}
+	</update>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteBatch" parameterType="java.util.Map">
+		DELETE FROM com_active WHERE trans_id=#{trans_id} AND start_amt=#{start_amt} AND score_way=#{score_way}
+	</delete>
+	
+	<sql id="queryDynSql">
+		<if test="trans_id != null and trans_id !=''">
+			AND com.trans_id LIKE '%${trans_id}%'
+		</if>
+		<if test="trans_name != null and trans_name !=''">
+			AND com.trans_name LIKE '%${trans_name}%'
+		</if>
+		<if test="enable_flag != null and enable_flag !=''">
+			AND com.enable_flag LIKE '%${enable_flag}%'
+		</if>
+	</sql>
+</mapper>

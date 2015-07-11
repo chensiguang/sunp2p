@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.user.dao.UserDao">
+
+	<!-- 查询某个角色 -->
+	<select id="selectUser" resultType="com.sunyard.directbank.user.model.UserModel">
+		SELECT ur.user_id,ur.user_name,ur.user_pwd,ur.user_type,ur.user_state,
+			ur.create_date,ur.pwd_modify_date,
+			ur.user_desc,ur.department_id,dep.department_name
+		FROM admin_user ur LEFT JOIN admin_department dep ON dep.department_id=ur.department_id
+		WHERE 1=1
+		<include refid="queryDynSql" />
+	</select>
+	
+	<!-- 查询记录信息总数 -->
+	<select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM admin_user ur WHERE ur.user_name != #{admin}
+		<include refid="queryDynSql"/>
+	</select>
+
+	<!-- 分页查询 -->
+	<select id="pageQuery" parameterType="java.util.Map" resultType="com.sunyard.directbank.user.model.UserModel">
+		SELECT ur.user_id,ur.user_name,ur.user_pwd,ur.user_type,ur.user_state,
+			ur.create_date,ur.pwd_modify_date,
+			ur.user_desc,ur.department_id,dep.department_name
+		FROM admin_user ur LEFT JOIN admin_department dep ON dep.department_id=ur.department_id
+		WHERE ur.user_name != #{admin}
+		<include refid="queryDynSql" />
+		limit #{startRow},#{rows}
+	</select>
+	
+	<!-- 添加用户 -->
+	<insert id="save">
+		INSERT INTO admin_user(user_id,user_name,user_pwd,user_type,user_state,create_date,pwd_modify_date,user_desc,department_id)
+		VALUES
+		(#{user_id},#{user_name},#{user_pwd},#{user_type},#{user_state},NOW(),NOW(),#{user_desc},#{department_id})
+	</insert>
+
+	<!-- 根据user_id查询用户 -->
+	<select id="getById" parameterType="java.lang.String" resultType="com.sunyard.directbank.user.model.UserModel">
+		SELECT * FROM admin_user WHERE user_id=#{user_id}
+	</select>
+
+	<!-- 修改用户 -->
+	<update id="update">
+		Update admin_user set user_name=#{user_name},user_type=#{user_type},user_desc=#{user_desc},
+		department_id=#{department_id} WHERE user_id=#{user_id}
+	</update>
+
+	<!-- 删除用户 -->
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM admin_user WHERE user_id=#{user_id}
+	</delete>
+	
+	<!-- 批量删除用户 -->
+	<delete id="deleteBatch" parameterType="java.util.List">
+		DELETE FROM admin_user WHERE user_id in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")" >
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- 查询所有用户 -->
+	<select id="selectAll" resultType="com.sunyard.directbank.user.model.UserModel">
+		SELECT ur.user_id,ur.user_name,ur.user_pwd,ur.user_type,ur.user_state,
+			ur.create_date,ur.pwd_modify_date,
+			ur.user_desc,ur.department_id,dep.department_name
+		FROM admin_user ur LEFT JOIN admin_department dep ON dep.department_id=ur.department_id
+	</select>
+
+	<!-- 重置密码为888888 -->
+	<update id="resetPwd">
+		UPDATE admin_user SET user_pwd=#{user_pwd}, pwd_modify_date=NOW() WHERE user_id=#{user_id}
+	</update>
+
+	<!-- 修改密码 -->
+	<update id="updatePwd">
+		UPDATE admin_user SET user_pwd=#{user_new_pwd}, pwd_modify_date=NOW() WHERE user_id=#{user_id}
+	</update>
+
+	<!-- 验证用户是否存在 -->
+	<select id="findByUserIdAndPwd" resultType="com.sunyard.directbank.user.model.UserModel">
+		SELECT * FROM admin_user WHERE user_name=#{user_name} AND user_pwd=#{user_pwd}
+	</select>
+
+	<!-- 锁定/解锁用户 -->
+	<update id="lockUser">
+		Update admin_user set user_state=#{user_state} WHERE user_id=#{user_id}
+	</update>
+	
+	<sql id="queryDynSql">
+		<if test="user_id != null and user_id != ''">
+			AND ur.user_id LIKE '%${user_id}%'
+		</if>
+		<if test="user_name != null and user_name != ''">
+			AND ur.user_name LIKE '%${user_name}%'
+		</if>
+		<if test="user_state != null and user_state != ''">
+			AND ur.user_state LIKE '%${user_state}%'
+		</if>
+		<if test="department_id !=null and department_id != ''">
+			AND ur.department_id LIKE '%${department_id}%'
+		</if>
+	</sql>
+
+</mapper>

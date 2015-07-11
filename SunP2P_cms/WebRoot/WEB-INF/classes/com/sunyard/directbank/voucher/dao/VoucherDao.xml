@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.voucher.dao.VoucherDao">
+	<!-- 查询记录信息总数 -->
+	<select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) from eacc_voucherinfo where 1=1
+       <include refid="queryDynSql"/>
+	</select>
+   
+    <!-- 分页查询 -->
+	<select id="pageQuery" parameterType="java.util.Map"
+		resultType="com.sunyard.directbank.voucher.model.VoucherModel">
+		SELECT voucher_no,voucher_amt,eacc_no,DATE_FORMAT(create_date,'%Y-%m-%d') create_date,
+			DATE_FORMAT(begin_date,'%Y-%m-%d') begin_date,DATE_FORMAT(end_date,'%Y-%m-%d') end_date,
+			DATE_FORMAT(used_date,'%Y-%m-%d') used_date,voucher_type,status,description
+		FROM eacc_voucherinfo WHERE 1=1
+        <include refid="queryDynSql"/>
+		limit #{startRow},#{endRow}
+	</select>
+	
+	 <!-- 增加记录 -->
+    <insert id="save" parameterType="com.sunyard.directbank.voucher.model.VoucherModel">
+        insert into eacc_voucherinfo (voucher_amt,eacc_no,create_date,begin_date,end_date,voucher_type,status,description) 
+        values (#{voucher_amt},#{eacc_no},#{create_date},#{begin_date},#{end_date},#{voucher_type},#{status},#{description})
+    </insert>
+	
+	<!-- 删除记录-->
+	<delete id="deleteBatch" parameterType="java.util.List">
+		DELETE FROM eacc_voucherinfo WHERE voucher_no in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")" >
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- 查询一条记录-->
+    <select id="getById" parameterType="java.lang.String" resultType="com.sunyard.directbank.voucher.model.VoucherModel">
+        SELECT voucher_no,voucher_amt,eacc_no,DATE_FORMAT(create_date,'%Y-%m-%d') create_date,
+         	DATE_FORMAT(begin_date,'%Y-%m-%d') begin_date,DATE_FORMAT(end_date,'%Y-%m-%d') end_date,
+       	 	DATE_FORMAT(used_date,'%Y-%m-%d') used_date,voucher_type,status,description
+		FROM eacc_voucherinfo where voucher_no=#{voucher_no}
+    </select>
+    
+     <!-- 修改记录 -->
+    <update id="update" parameterType="com.sunyard.directbank.voucher.model.VoucherModel">
+       update eacc_voucherinfo set voucher_amt=#{voucher_amt},eacc_no=#{eacc_no},begin_date=#{begin_date}, 
+       end_date=#{end_date}, voucher_type=#{voucher_type},status=#{status},description=#{description}
+       where voucher_no=#{voucher_no}
+    </update>
+    
+	<sql id="queryDynSql">
+		<if test="voucher_no != null and voucher_no != ''">
+			AND voucher_no LIKE '%${voucher_no}%'
+		</if>
+		<if test="eacc_no != null and eacc_no != ''">
+			AND eacc_no LIKE '%${eacc_no}%'
+		</if>
+		<if test="voucher_type != null and voucher_type != ''">
+			AND voucher_type LIKE '%${voucher_type}%'
+		</if>
+		<if test="status != null and status != ''">
+			AND status LIKE '%${status}%'
+		</if>
+		<if test="begin_date != null and begin_date != ''">
+			<![CDATA[AND DATE_FORMAT(begin_date,'%Y-%m-%d') >= '${begin_date}']]>
+		</if>
+		<if test="end_date != null and end_date != ''">
+			<![CDATA[AND DATE_FORMAT(end_date,'%Y-%m-%d') <= '${end_date}']]>
+		</if>
+	</sql>
+</mapper>

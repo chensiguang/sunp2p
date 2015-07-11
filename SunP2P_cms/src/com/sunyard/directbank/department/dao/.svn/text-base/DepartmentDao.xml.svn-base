@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.department.dao.DepartmentDao">
+
+	<!-- 查询所有机构 -->
+	<select id="selectAll" resultType="com.sunyard.directbank.department.model.DepartmentModel">
+		SELECT dep.*,par.department_name parent_depName FROM admin_department dep LEFT JOIN
+		admin_department par ON
+		dep.parent_id=par.department_id
+	</select>
+
+	<!-- 删除机构 -->
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM admin_department WHERE department_id=#{department_id} OR parent_id=#{department_id}
+	</delete>
+	
+	<!-- 批量删除机构 -->
+	<delete id="deleteBatch" parameterType="java.lang.Integer">
+		DELETE FROM admin_department WHERE department_id=#{department_id} OR parent_id=#{department_id}
+	</delete>
+
+	<!-- 根据department_id查询机构 -->
+	<select id="getById" parameterType="java.lang.Integer" resultType="com.sunyard.directbank.department.model.DepartmentModel">
+		SELECT * FROM admin_department WHERE department_id=#{department_id}
+	</select>
+
+	<!-- 修改机构 -->
+	<update id="update">
+		Update admin_department set department_id=#{department_id},department_name=#{department_name},department_level=#{department_level},
+		department_desc=#{department_desc},parent_id=#{parent_id} WHERE department_id=#{department_id}
+	</update>
+
+	<!-- 添加机构 -->
+	<insert id="save">
+		INSERT INTO admin_department(department_name,department_level,parent_id,department_desc)
+		VALUES(#{department_name},#{department_level},#{parent_id},#{department_desc})
+	</insert>
+
+	<!-- 查询某个机构 -->
+	<select id="selectDepartment" resultType="com.sunyard.directbank.department.model.DepartmentModel">
+		SELECT * FROM admin_department dep WHERE 1=1
+		<include refid="queryDynSql"/>
+	</select>
+
+	<!-- 查询所有顶级机构 -->
+	<select id="selectTopDepartments" resultType="com.sunyard.directbank.department.model.DepartmentModel">
+		SELECT dep.*,par.department_name parent_depName FROM
+		admin_department dep LEFT JOIN
+		admin_department par ON
+		dep.parent_id=par.department_id WHERE dep.parent_id=0
+	</select>
+
+	<!-- 查询所有机构 -->
+	<select id="selectAllDepartments" resultType="com.sunyard.directbank.department.model.DepartmentModel">
+		SELECT dept.*, part.department_id children, part.department_name children
+		FROM admin_department dept
+		LEFT JOIN
+		admin_department part ON dept.department_id=part.parent_id
+	</select>
+
+	<!-- 查询所有子机构 -->
+	<select id="selectChildrenDepartments" resultType="com.sunyard.directbank.department.model.DepartmentModel">
+		SELECT dep.*,par.department_name parent_depName FROM
+		admin_department dep LEFT JOIN
+		admin_department par ON
+		dep.parent_id=par.department_id WHERE dep.parent_id=#{parent_id}
+	</select>
+	
+	<!-- 查询记录信息总数 -->
+	<select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM admin_department dep WHERE dep.parent_id=#{parent_id}
+		<include refid="queryDynSql"/>
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="pageQuery" parameterType="java.util.Map" resultType="com.sunyard.directbank.department.model.DepartmentModel">
+		SELECT dep.*,par.department_name parent_depName FROM
+		admin_department dep LEFT JOIN
+		admin_department par ON
+		dep.parent_id=par.department_id WHERE dep.parent_id=#{parent_id}
+		<include refid="queryDynSql" />
+		limit #{startRow},#{rows}
+	</select>
+	
+	<sql id="queryDynSql">
+		<if test="department_id != 0">
+			AND dep.department_id LIKE '%${department_id}%'
+		</if>
+		<if test="department_name != null and department_name != ''">
+			AND dep.department_name LIKE '%${department_name}%'
+		</if>
+	</sql>
+
+</mapper>

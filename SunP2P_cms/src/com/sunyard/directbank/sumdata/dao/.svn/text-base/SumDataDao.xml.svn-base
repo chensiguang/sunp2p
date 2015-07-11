@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.sumdata.dao.SumDataDao">
+	<sql id="queryDynSql">
+		<if test="report_date !=null and report_date !=''">
+			<![CDATA[and date_format(report_date,'%Y-%m-%d') = '${report_date}']]>
+		</if>
+	</sql>
+	
+	<select id="haveStatisticsTodayForTransAmt" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) from  report_transamt where 1=1 <include refid="queryDynSql"/>
+	</select>
+	
+	<select id="haveStatisticsTodayForAmtList" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) from  report_amtlist where 1=1 <include refid="queryDynSql"/>
+	</select>
+	
+	<select id="haveStatisticsTodayForEAccount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) from  report_eaccount where 1=1 <include refid="queryDynSql"/>
+	</select>
+	
+	<sql id="querydate">
+		(
+			(<![CDATA[ date_format(trans_date,'%Y-%m-%d') = '${start_date}']]> and <![CDATA[trans_time > #{batch_time}]]>) 
+			or 
+			(<![CDATA[ date_format(trans_date,'%Y-%m-%d') = '${end_date}']]> and <![CDATA[trans_time < #{batch_time}]]>)
+		)
+	</sql>
+	<select id="getTransAmtList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT channel,prod_id,prod_name,prod_type,SUM(amt) AS amt,COUNT(*) AS trans_count FROM (
+			SELECT t.channel,t.prod_id,t.prod_name,p.prod_type,t.amt
+			FROM trans_transreq t LEFT JOIN prod_productinfo p ON t.prod_id = p.prod_id 
+			WHERE t.trade_state = #{trade_state} and t.pay_type = #{pay_type} and <include refid="querydate"/>
+		)n
+		GROUP BY prod_id,channel
+	</select>
+	
+	<insert id="insertTransAmtBatch" parameterType="java.util.List">
+		insert into report_transamt (report_date,prod_type,channel,prod_id,prod_name,amt,count) values 
+		<foreach collection="list" item="item" index="index" separator=",">
+			( #{item.report_date}, #{item.prod_type}, #{item.channel}, #{item.prod_id}, #{item.prod_name}, #{item.amt}, #{item.trans_count})
+		</foreach>
+	</insert>
+	
+	<select id="getTransAmtListList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT amt,oppo_acc  FROM  eacc_accountamtlist  WHERE amt_type = #{amt_type}  and <include refid="querydate"/>
+	</select>
+	
+	<select id="bankCardList" resultType="java.lang.String">
+		select card_no from eacc_cardinfo
+	</select>
+	
+	<select id="loadBankNoById" parameterType="java.lang.String" resultType="java.lang.String">
+		select bank_no from eacc_cardinfo where card_no = #{oppo_acc}
+	</select>
+	
+	<insert id="insertAmtList" parameterType="java.util.Map">
+		insert into report_amtlist (report_date,tot_in_amt,tot_out_amt,mybank_in_amt,othbank_in_amt,mybank_out_amt,othbank_out_amt,bank_amt) 
+		values 
+		(#{report_date},#{tot_in_amt},#{tot_out_amt},#{mybank_in_amt},#{othbank_in_amt},#{mybank_out_amt},#{othbank_out_amt},#{bank_amt})
+	</insert>
+	
+	<select id="getEAccountList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT m.eacc_no,n.card_no,n.bank_no,n.card_type 
+ 		FROM eacc_accountinfo m, eacc_cardinfo n
+ 		WHERE m.eacc_no = n.eacc_no AND <![CDATA[UNIX_TIMESTAMP(reg_time) > UNIX_TIMESTAMP('${start_date}')]]> 
+ 		AND <![CDATA[UNIX_TIMESTAMP(reg_time) < UNIX_TIMESTAMP('${end_date}')]]>
+	</select>
+	
+	<insert id="insertEAccountList" parameterType="java.util.Map">
+		insert into report_eaccount (report_date,tot_num,mybank_num,othbank_num,mybank_card_num,othbank_card_num) 
+		values 
+		(#{report_date},#{tot_num},#{mybank_num},#{othbank_num},#{mybank_card_num},#{othbank_card_num})
+	</insert>
+</mapper>

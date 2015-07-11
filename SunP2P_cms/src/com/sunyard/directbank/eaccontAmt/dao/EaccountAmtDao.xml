@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.eaccontAmt.dao.EaccountAmtDao">
+	<update id="updateEAcccoutBalance" parameterType="java.util.Map">
+		update eacc_accountinfo set n_balance =n_balance+#{amt_add}, t_balance =t_balance+#{amt_add} where eacc_no = #{eacc_no}
+	</update>
+	
+	<insert id="insertEAccountAmtList" parameterType="java.util.Map">
+		insert into eacc_accountamtlist 
+			(serial_id,trans_code,system_date,trans_date,trans_time,eacc_no,amt_type,amt_channel,oppo_acc,amt) 
+		values 
+			(#{serial_id},#{trans_code}, #{system_date},#{trans_date},#{trans_time},#{eacc_no},
+			#{amt_type},#{amt_channel},#{oppo_acc}, #{amt})
+	</insert>
+	
+	<update id="updateShareInall" parameterType="ShareInall">
+		update share_inall 
+		<set>
+			<if test="tot_val !=null and tot_val !='' ">
+				tot_val = #{tot_val},
+			</if>
+			<if test="last_date !=null and last_date !='' ">
+				last_date = #{last_date},
+			</if>
+			<if test="transfer_vol !=null">
+				transfer_vol = #{transfer_vol},
+			</if>
+			<if test="use_vol !=null and use_vol !='' ">
+				use_vol =use_vol + #{use_vol},
+			</if>
+			<if test="tot_vol !=null and tot_vol !='' ">
+				tot_vol =tot_vol + #{tot_vol},
+			</if>
+			<if test="payed_val !=null and payed_val !='' ">
+				payed_val =payed_val + #{payed_val}
+			</if>
+		</set>
+		where eacc_no = #{eacc_no} and prod_id = #{prod_id}
+	</update>
+	
+	<insert id="insertShareList" parameterType="java.util.Map">
+		insert into share_list
+			(eacc_no,acc_type,account,prod_id,system_date,var_date,var_time,var_direction,var_value,var_cause,reserve)
+		values
+			(#{eacc_no},#{acc_type},#{account},#{prod_id},#{system_date},#{var_date},#{var_time},
+			#{var_direction},#{var_value},#{var_cause},#{reserve}) 
+	</insert>
+</mapper>

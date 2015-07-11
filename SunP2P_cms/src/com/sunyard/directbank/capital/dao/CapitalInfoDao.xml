@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.capital.dao.CapitalInfoDao">
+
+	<!-- 产品销售统计 -->
+	<sql id="queryDynSql">
+		<if test="prod_type !=null and prod_type !='' ">
+			and prod_type like '%${prod_type}%'
+		</if>
+		<if test="prod_id !=null and prod_id !='' ">
+			and prod_id like '%${prod_id}%'
+		</if>
+		<if test="prod_name !=null and prod_name !='' ">
+			and prod_name like '%${prod_name}%'
+		</if>
+		<if test="start_time !=null and start_time !=''">
+			<![CDATA[and date_format(report_date,'%Y-%m-%d') >= '${start_time}']]>
+		</if>
+		<if test="end_time !=null and end_time !='' ">
+			<![CDATA[and date_format(report_date,'%Y-%m-%d') <= '${end_time}']]>
+		</if>
+	</sql>
+	
+	<sql id="sqlHead">
+		select prod_type, prod_name,prod_id,channel as trans_channel, sum(count) as 'total_count',sum(amt) as 'sum_amount',
+	</sql>
+	
+	<sql id="sqlcore">
+		from report_transamt  where prod_id is not null 
+		<include refid="queryDynSql" />
+		group by prod_id ,date_type,prod_type,prod_name
+		order by date_type,prod_id
+	</sql>
+	
+	<sql id="coreByDay">
+		<include refid="sqlHead"/>
+		<include refid="public.selectByDay"/> 
+		<include refid="sqlcore"/>	
+	</sql>
+	
+	<sql id="coreByMonth">
+		<include refid="sqlHead"/>
+		<include refid="public.selectByMonth"/> 
+		<include refid="sqlcore"/>
+	</sql>
+	
+	<sql id="coreByYear">
+		<include refid="sqlHead"/>
+		<include refid="public.selectByYear"/> 
+		<include refid="sqlcore"/>
+	</sql>
+	
+	<select id="selectListByDay" parameterType="java.util.Map" resultType="java.util.Map">
+		 <include refid="coreByDay"/>
+	</select>
+	
+	<select id="selectListByMonth" parameterType="java.util.Map" resultType="java.util.Map">
+		 <include refid="coreByMonth"/>
+	</select>
+	
+	<select id="selectListByYear" parameterType="java.util.Map" resultType="java.util.Map">
+		 <include refid="coreByYear"/>
+	</select>
+	
+	
+	
+	<select id="pageCountByDay" parameterType="java.util.Map" resultType="java.lang.Integer">
+		<include refid="public.sqlcountBegin"/>
+		<include refid="coreByDay"/>
+		<include refid="public.sqlcountEnd"/>
+	</select>
+	
+	<select id="pageQueryByDay" parameterType="java.util.Map" resultType="java.util.Map">
+		<include refid="coreByDay"/>
+		<include refid="public.sqllimit"/>
+	</select>
+	
+	<select id="pageCountByMonth" parameterType="java.util.Map" resultType="java.lang.Integer">
+		<include refid="public.sqlcountBegin"/>
+		<include refid="coreByMonth"/>
+		<include refid="public.sqlcountEnd"/>
+	</select>
+	
+	<select id="pageQueryByMonth" parameterType="java.util.Map" resultType="java.util.Map">
+		<include refid="coreByMonth"/>
+		<include refid="public.sqllimit"/>
+	</select>
+	
+	<select id="pageCountByYear" parameterType="java.util.Map" resultType="java.lang.Integer">
+		<include refid="public.sqlcountBegin"/>
+		<include refid="coreByYear"/>
+		<include refid="public.sqlcountEnd"/>
+	</select>
+	
+	<select id="pageQueryByYear" parameterType="java.util.Map" resultType="java.util.Map">
+		<include refid="coreByYear"/>
+		<include refid="public.sqllimit"/>
+	</select>
+</mapper>

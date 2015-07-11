@@ -1,0 +1,337 @@
+package com.sunyard.directbank.batchdayend.service.impl;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.sunyard.directbank.base.model.Consts;
+import com.sunyard.directbank.base.model.Properties;
+import com.sunyard.directbank.batchdayend.dao.BatchDayEndDao;
+import com.sunyard.directbank.batchdayend.service.IBatchDayEndService;
+import com.sunyard.directbank.batchorder.model.BatchOrderModel;
+import com.sunyard.directbank.enums.DEALSTATUS;
+import com.sunyard.directbank.enums.PRODSTATE;
+import com.sunyard.directbank.enums.PRODTRANSSTATUS;
+import com.sunyard.directbank.tools.BatchDayEndUtil;
+import com.sunyard.directbank.tools.DateUtil;
+import com.sunyard.directbank.tools.FilingUtil;
+
+@Service
+@Transactional
+public class BatchDayEndService implements IBatchDayEndService {
+
+	@Resource
+	private BatchDayEndDao batchDayEndDao;
+
+	@Override
+	public void updateDealStatus(BatchOrderModel batchOrModel) {
+
+		batchDayEndDao.updateDealStatus(batchOrModel);
+
+	}
+
+	@Override
+	public boolean updateStatus(String status) {
+
+		return batchDayEndDao.updateStatus(status);
+	}
+
+	@Override
+	public boolean batchStart(String user_id) throws Exception {
+
+		// 设置清算状态为正在处理
+		long beginTime = new Date().getTime();
+		BatchOrderModel batchOrModel = BatchDayEndUtil.batchInProgress(Consts.BATCH_START, user_id);
+		updateDealStatus(batchOrModel);
+
+		// 设置产品交易状态为不允许
+		BatchOrderModel batchOrdModel = new BatchOrderModel();
+		try {
+			updateStatus(PRODTRANSSTATUS.NotAllow.getCode());	// 设置产品交易状态为不允许
+			long endTime = new Date().getTime();
+			String hold_time = BatchDayEndUtil.holdTime(endTime, beginTime);
+			batchOrdModel = BatchDayEndUtil.batchResult(DEALSTATUS.Success.getCode(), 
+					Consts.BATCH_START, "设置产品交易状态为不允许成功", 1);
+			updateDealStatus(batchOrdModel);
+
+		} catch (Exception e) {
+			long endTime = new Date().getTime();
+			String hold_time = BatchDayEndUtil.holdTime(endTime, beginTime);
+			batchOrdModel = BatchDayEndUtil.batchResult(DEALSTATUS.Failure.getCode(), 
+					Consts.BATCH_START, "设置产品交易状态为不允许失败", 0);
+			updateDealStatus(batchOrdModel);
+			e.printStackTrace();
+			throw e;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean batchEnd(String user_id) throws Exception {
+
+		// 设置清算状态为正在处理
+		long beginTime = new Date().getTime();
+		BatchOrderModel batchOrModel = BatchDayEndUtil.batchInProgress(Consts.BATCH_END, user_id);
+		updateDealStatus(batchOrModel);
+
+		// 设置产品交易状态为允许
+		BatchOrderModel batchOrdModel = new BatchOrderModel();
+		try {
+			updateStatus(PRODTRANSSTATUS.Allow.getCode());	// 设置产品交易状态为允许
+			long endTime = new Date().getTime();
+			String hold_time = BatchDayEndUtil.holdTime(endTime, beginTime);
+			batchOrdModel = BatchDayEndUtil.batchResult(DEALSTATUS.Success.getCode(), 
+					Consts.BATCH_END, "设置产品交易状态为允许成功", 1);
+			updateDealStatus(batchOrdModel);
+
+			// 系统时间要加 1天
+			String systemDate = getSystemDate(Consts.SYSTEM_DATE);
+			updateSystemDate(Consts.SYSTEM_DATE, systemDate);
+			
+		} catch (Exception e) {
+			long endTime = new Date().getTime();
+			String hold_time = BatchDayEndUtil.holdTime(endTime, beginTime);
+			batchOrdModel = BatchDayEndUtil.batchResult(DEALSTATUS.Failure.getCode(), 
+					Consts.BATCH_END, "设置产品交易状态为允许失败", 0);
+			updateDealStatus(batchOrdModel);
+			e.printStackTrace();
+			throw e;
+		}
+		return true;
+	}
+
+	/**
+	 * 获取当前系统日期
+	 * 
+	 * @param param_id
+	 * @return
+	 */
+	@Override
+	public String getSystemDate(String param_id) {
+
+		return batchDayEndDao.getSystemDate(param_id);
+	}
+
+	/**
+	 * 系统日期更新
+	 * 
+	 * @param param_id
+	 * @param systemDate
+	 */
+	@Override
+	public void updateSystemDate(String param_id, String systemDate) {
+
+		String system_date = DateUtil.formatDateToStr(DateUtil.laterDate(DateUtil.parseDate(systemDate), 1));
+		batchDayEndDao.udpateSystemDate(param_id, system_date);
+	}
+
+	/**
+	 * 产品终止操作
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public boolean prodEnd(String user_id) throws Exception {
+		
+		long beginTime = new Date().getTime();
+		BatchOrderModel batchOrModel = BatchDayEndUtil.batchInProgress(Consts.PROD_END, user_id);
+		updateDealStatus(batchOrModel);
+
+		String sysDate = DateUtil.todayStr();
+		String state = PRODSTATE.Terminate.getCode();
+		BatchOrderModel batchOrdModel = new BatchOrderModel();
+		try {
+			if (toCount(sysDate) > 0) {
+				prodEnd(sysDate, state);	// 设置产品终止
+				long endTime = new Date().getTime();
+				String hold_time = BatchDayEndUtil.holdTime(endTime, beginTime);
+				batchOrdModel = BatchDayEndUtil.batchResult(DEALSTATUS.Success.getCode(), 
+						Consts.PROD_END, "设置产品终止成功", 1);
+			} else{
+				long endTime = new Date().getTime();
+				String hold_time = BatchDayEndUtil.holdTime(endTime, beginTime);
+				batchOrdModel = BatchDayEndUtil.batchResult(DEALSTATUS.Success.getCode(), 
+						Consts.PROD_END, "没有可终止的产品", 1);
+			}
+			updateDealStatus(batchOrdModel);
+			
+		} catch (Exception e) {
+			long endTime = new Date().getTime();
+			String hold_time = BatchDayEndUtil.holdTime(endTime, beginTime);
+			batchOrdModel = BatchDayEndUtil.batchResult(DEALSTATUS.Failure.getCode(), 
+					Consts.PROD_END, "设置产品终止失败", 0);
+			updateDealStatus(batchOrdModel);
+			e.printStackTrace();
+			throw e;
+		}
+		return true;
+	
+	}
+
+	/**
+	 * 债权转让失效操作
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public boolean invalid(String user_id) throws Exception {
+		
+		long beginTime = new Date().getTime();
+		BatchOrderModel batchOrModel = BatchDayEndUtil.batchInProgress(Consts.INVALID, user_id);
+		updateDealStatus(batchOrModel);
+
+		String sysDate = DateUtil.todayStr();
+		List<Map<String, Object>> shares = findShare(sysDate);
+		BatchOrderModel batchOrdModel = new BatchOrderModel();
+		try {
+			if (!shares.isEmpty() && null != shares) {
+				String state = PRODSTATE.obturate.getCode();
+			    invalid(sysDate, state);	// 设置债权转让失效
+		    	for (Map<String, Object> map : shares) {	// 将客户产品份额表的可转让份额设置为可用份额的数目
+		    		changeTransfer_vol(map);
+		    	}
+			   	long endTime = new Date().getTime();
+			   	String hold_time = BatchDayEndUtil.holdTime(endTime, beginTime);
+			   	batchOrdModel = BatchDayEndUtil.batchResult(DEALSTATUS.Success.getCode(), 
+			   			Consts.INVALID, "设置债权转让失效成功", 1);
+			} else{
+				long endTime = new Date().getTime();
+				String hold_time = BatchDayEndUtil.holdTime(endTime, beginTime);
+				batchOrdModel = BatchDayEndUtil.batchResult(DEALSTATUS.Success.getCode(), 
+						Consts.INVALID, "没有失效的债权转让", 1);
+			}
+			updateDealStatus(batchOrdModel);
+			
+		} catch (Exception e) {
+			long endTime = new Date().getTime();
+			String hold_time = BatchDayEndUtil.holdTime(endTime, beginTime);
+			batchOrdModel = BatchDayEndUtil.batchResult(DEALSTATUS.Failure.getCode(), 
+					Consts.INVALID, "设置债权转让失效失败", 0);
+			updateDealStatus(batchOrdModel);
+			e.printStackTrace();
+			throw e;
+		}
+		return true;
+	}
+	
+	/**
+	 * 执行文件归档
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean doFiling(String user_id) throws Exception {
+		
+		long beginTime = new Date().getTime();
+		BatchOrderModel batchOrModel = BatchDayEndUtil.batchInProgress(Consts.FILING, user_id);
+		updateDealStatus(batchOrModel);
+
+		String zipPath = Properties.getString("zipPath");			// 压缩文件存放目录
+		String cmslogPath = Properties.getString("logPath");		// 管理台的log文件位置
+		String cmszipFile = Properties.getString("cmszipFile");		// 管理台的压缩文件名称
+		String weblogPath = Properties.getString("weblogPath");		// web端的log文件位置
+		String webzipFile = Properties.getString("webzipFile");		// web端的压缩文件名称
+		FilingUtil.creatZipPath(zipPath);							// 如果没有此目录就创建
+		
+		BatchOrderModel batchOrdModel = new BatchOrderModel();
+		try {
+			FilingUtil.filingWebLog(zipPath, weblogPath, webzipFile);
+			FilingUtil.filingCmsLog(zipPath, cmslogPath, cmszipFile);
+			long endTime = new Date().getTime();
+			String hold_time = BatchDayEndUtil.holdTime(endTime, beginTime);
+			batchOrdModel = BatchDayEndUtil.batchResult(DEALSTATUS.Success.getCode(), 
+					Consts.FILING, "文件归档成功", 1);
+			updateDealStatus(batchOrdModel);
+			
+		} catch (Exception e) {
+			long endTime = new Date().getTime();
+			String hold_time = BatchDayEndUtil.holdTime(endTime, beginTime);
+			batchOrdModel = BatchDayEndUtil.batchResult(DEALSTATUS.Failure.getCode(), 
+					Consts.FILING, "文件归档失败", 0);
+			updateDealStatus(batchOrdModel);
+			e.printStackTrace();
+			throw e;
+		}
+		return true;
+
+	}
+
+	@Override
+	public List<BatchOrderModel> selectAllBatchOrders() throws Exception {
+		
+		List<BatchOrderModel> orders = batchDayEndDao.selectAllBatchOrders();
+		for(BatchOrderModel order : orders) {
+			String status = order.getDeal_status();
+			if(status.equals(DEALSTATUS.UnActivated.getCode())) {
+				order.setDeal_status("UnActivated");
+			}else if(status.equals(DEALSTATUS.Activated.getCode())) {
+				order.setDeal_status("Activated");
+			}else if(status.equals(DEALSTATUS.Pending.getCode())) {
+				order.setDeal_status("Pending");
+			}else if(status.equals(DEALSTATUS.Success.getCode())) {
+				order.setDeal_status("Success");
+			}else if(status.equals(DEALSTATUS.Failure.getCode())) {
+				order.setDeal_status("Failure");
+			}else if(status.equals(DEALSTATUS.Abort.getCode())) {
+				order.setDeal_status("Abort");
+			}else if(status.equals(DEALSTATUS.Processing.getCode())) {
+				order.setDeal_status("Processing");
+			}
+		}
+		return orders;
+	}
+
+	@Override
+	public List<BatchOrderModel> sortedBatchOrders(List<BatchOrderModel> batchOrders) {
+		
+		List<BatchOrderModel> sortedBatchOrders = new ArrayList<BatchOrderModel>();
+		for(BatchOrderModel order : batchOrders) {
+			if (order.getParent_task_code().equals("0")) {
+				sortedBatchOrders.add(order);
+				break;
+			}
+		}
+		
+		for(int i = 0; i < batchOrders.size() - 1; i ++) {
+			for(BatchOrderModel order : batchOrders) {
+				if ( order.getParent_task_code().equals( sortedBatchOrders.get(i).getTask_code() ) ) {
+					sortedBatchOrders.add(order);
+				}
+			}
+		}
+		return sortedBatchOrders;
+	}
+
+	@Override
+	public int toCount(String sysDate) {
+		return batchDayEndDao.toCount(sysDate);
+	}
+
+	@Override
+	public boolean prodEnd(String sysDate, String state) {
+		return batchDayEndDao.prodEnd(sysDate, state);
+	}
+
+	@Override
+	public List<Map<String, Object>> findShare(String sysDate) {
+		return batchDayEndDao.findShare(sysDate);
+	}
+
+	@Override
+	public boolean invalid(String sysDate, String state) {
+		return batchDayEndDao.invalid(sysDate, state);
+	}
+
+	@Override
+	public void changeTransfer_vol(Map<String, Object> map) {
+		batchDayEndDao.changeTransfer_vol(map);
+	}
+	
+}

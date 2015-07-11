@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.batchdayend.dao.BatchDayEndDao">
+
+	<!-- 查询系统日期 -->
+	<select id="getSystemDate" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT param_value FROM com_param WHERE param_id = #{param_id}
+	</select>
+	
+	<!-- 设置系统日期为加 1 天 -->
+	<update id="udpateSystemDate" parameterType="java.lang.String" >
+		UPDATE com_param SET param_value = #{system_date} WHERE param_id = #{param_id}
+	</update>
+	
+	<!-- 设置产品交易状态 -->
+	<update id="updateStatus" parameterType="java.lang.String" >
+		UPDATE prod_transstatus SET status = #{status}
+	</update>
+	
+	<!-- 设置系统清算流程表 -->
+	<update id="updateDealStatus" parameterType="com.sunyard.directbank.batchorder.model.BatchOrderModel" >
+		UPDATE batch_order 
+		<include refid="updateDealStatus"/>
+		WHERE task_code = #{task_code}
+	</update>
+	
+	<!-- 设置产品终止 -->
+	<update id="prodEnd" parameterType="java.lang.String" >
+		UPDATE prod_productinfo  set prod_state=#{state} where  expire_date= #{sysDate}
+	</update>
+	
+	<!-- 查询需要终止操作产品的数目 -->
+	 <select id="toCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+	select count(*) from prod_productinfo where expire_date= #{sysDate}
+	</select>
+	
+	<!-- 设置债权转让失效 -->
+	<update id="invalid" parameterType="java.lang.String" >
+		UPDATE prod_productnav2  set change_state=#{state} where  deadline= #{sysDate}
+	</update>
+	
+   <!-- 查询当前需要债权转让失效的客户产品份额 -->
+	<select id="findShare" parameterType="java.lang.String" resultType="java.util.Map">
+	   select eacc_no,prod_id from prod_productnav2 where <![CDATA[DATE_FORMAT(deadline,'%Y-%m-%d') = #{sysDate}]]>
+	</select>
+	
+	<!-- 将客户产品份额表的可转让份额设置为可用份额的数目-->
+	<update id="changeTransfer_vol" parameterType="java.util.Map" >
+		UPDATE share_inall SET transfer_vol = (SELECT a.use_vol FROM 
+		(SELECT use_vol FROM share_inall  WHERE eacc_no=#{eacc_no} AND prod_id=#{prod_id})a) 
+         WHERE eacc_no=#{eacc_no} AND prod_id=#{prod_id}
+	</update>
+	
+	<!-- 获取所有清算流程 -->
+	<select id="selectAllBatchOrders" resultType="com.sunyard.directbank.batchorder.model.BatchOrderModel" >
+		SELECT * FROM batch_order
+	</select>
+	
+	<sql id="updateDealStatus">
+		<set>
+			<if test="task_name != null and task_name !=''"> task_name = #{task_name}, </if>
+			<if test="batch_group != null and batch_group !=''"> batch_group = #{batch_group}, </if>
+			<if test="parent_task_code != null and parent_task_code !=''"> parent_task_code = #{parent_task_code}, </if>
+			<if test="redo_flag != null and redo_flag !=''"> redo_flag = #{redo_flag}, </if>
+			<if test="delay_flag != null and delay_flag !=''"> delay_flag = #{delay_flag}, </if>
+			<if test="delay_time != null and delay_time !=''"> delay_time = #{delay_time}, </if>
+			<if test="op_code != null and op_code !=''"> op_code = #{op_code},</if>
+			<if test="op_times != null and op_times !=''"> op_times = op_times + #{op_times}, </if>
+			<if test="deal_status != null and deal_status !=''"> deal_status = #{deal_status}, </if>
+			<if test="return_code != null and return_code !=''"> return_code = #{return_code}, </if>
+			<if test="return_msg != null and return_msg !=''"> return_msg = #{return_msg}, </if>
+			<if test="warn_flag != null and warn_flag !=''"> warn_flag = #{warn_flag}, </if>
+			<if test="warn_msg != null and warn_msg !=''"> warn_msg = #{warn_msg}, </if>
+			<if test="begin_time != null and begin_time !=''"> begin_time = #{begin_time}, </if>
+			<if test="end_time != null and end_time !=''"> end_time = #{end_time}, </if>
+			<if test="hold_time != null and hold_time !=''"> hold_time = #{hold_time}, </if>
+			<if test="last_trans_date != null and last_trans_date !=''"> last_trans_date = #{last_trans_date} </if>
+		</set>
+	</sql>
+	
+</mapper>

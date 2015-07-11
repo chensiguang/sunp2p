@@ -1,0 +1,215 @@
+K 25
+svn:wc:ra_dav:version-url
+V 162
+/svn/YF-DB/!svn/ver/2485/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums
+END
+REPAYTYPE.java
+K 25
+svn:wc:ra_dav:version-url
+V 177
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/REPAYTYPE.java
+END
+CARDTYPE.java
+K 25
+svn:wc:ra_dav:version-url
+V 176
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/CARDTYPE.java
+END
+MAILSTA.java
+K 25
+svn:wc:ra_dav:version-url
+V 175
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/MAILSTA.java
+END
+TRANSSTATE.java
+K 25
+svn:wc:ra_dav:version-url
+V 178
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/TRANSSTATE.java
+END
+SYSTYPE.java
+K 25
+svn:wc:ra_dav:version-url
+V 175
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/SYSTYPE.java
+END
+PARAMTYPE.java
+K 25
+svn:wc:ra_dav:version-url
+V 177
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/PARAMTYPE.java
+END
+SEX.java
+K 25
+svn:wc:ra_dav:version-url
+V 171
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/SEX.java
+END
+QUOTACONTROL.java
+K 25
+svn:wc:ra_dav:version-url
+V 180
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/QUOTACONTROL.java
+END
+BATCHDATETYPE.java
+K 25
+svn:wc:ra_dav:version-url
+V 181
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/BATCHDATETYPE.java
+END
+TRANSTYPE.java
+K 25
+svn:wc:ra_dav:version-url
+V 177
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/TRANSTYPE.java
+END
+PAYTYPE.java
+K 25
+svn:wc:ra_dav:version-url
+V 175
+/svn/YF-DB/!svn/ver/2485/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/PAYTYPE.java
+END
+BATCHADDTYPE.java
+K 25
+svn:wc:ra_dav:version-url
+V 180
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/BATCHADDTYPE.java
+END
+TRANSCHANNEL.java
+K 25
+svn:wc:ra_dav:version-url
+V 180
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/TRANSCHANNEL.java
+END
+PAYCHANNEL.java
+K 25
+svn:wc:ra_dav:version-url
+V 178
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/PAYCHANNEL.java
+END
+PRODSTATE.java
+K 25
+svn:wc:ra_dav:version-url
+V 177
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/PRODSTATE.java
+END
+CHANGEREASON.java
+K 25
+svn:wc:ra_dav:version-url
+V 180
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/CHANGEREASON.java
+END
+MODIFLAG.java
+K 25
+svn:wc:ra_dav:version-url
+V 176
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/MODIFLAG.java
+END
+PRODTYPE.java
+K 25
+svn:wc:ra_dav:version-url
+V 176
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/PRODTYPE.java
+END
+REPORTTYPE.java
+K 25
+svn:wc:ra_dav:version-url
+V 178
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/REPORTTYPE.java
+END
+ACCTSTA.java
+K 25
+svn:wc:ra_dav:version-url
+V 175
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/ACCTSTA.java
+END
+CURRTYPE.java
+K 25
+svn:wc:ra_dav:version-url
+V 176
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/CURRTYPE.java
+END
+SCORETYPE.java
+K 25
+svn:wc:ra_dav:version-url
+V 177
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/SCORETYPE.java
+END
+VALUETYPE.java
+K 25
+svn:wc:ra_dav:version-url
+V 177
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/VALUETYPE.java
+END
+CHANGETYPE.java
+K 25
+svn:wc:ra_dav:version-url
+V 178
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/CHANGETYPE.java
+END
+ACCOUNTTYPE.java
+K 25
+svn:wc:ra_dav:version-url
+V 179
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/ACCOUNTTYPE.java
+END
+FINANCEAPP.java
+K 25
+svn:wc:ra_dav:version-url
+V 178
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/FINANCEAPP.java
+END
+SEQCODETYPE.java
+K 25
+svn:wc:ra_dav:version-url
+V 179
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/SEQCODETYPE.java
+END
+REPAYMENTSTATUS.java
+K 25
+svn:wc:ra_dav:version-url
+V 183
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/REPAYMENTSTATUS.java
+END
+PRODTRANSSTATUS.java
+K 25
+svn:wc:ra_dav:version-url
+V 183
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/PRODTRANSSTATUS.java
+END
+AMTTYPE.java
+K 25
+svn:wc:ra_dav:version-url
+V 175
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/AMTTYPE.java
+END
+SALECHANNELCONTROL.java
+K 25
+svn:wc:ra_dav:version-url
+V 186
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/SALECHANNELCONTROL.java
+END
+RSTCODE.java
+K 25
+svn:wc:ra_dav:version-url
+V 175
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/RSTCODE.java
+END
+DEALSTATUS.java
+K 25
+svn:wc:ra_dav:version-url
+V 178
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/DEALSTATUS.java
+END
+ISUSE.java
+K 25
+svn:wc:ra_dav:version-url
+V 173
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/ISUSE.java
+END
+ISUSESTATE.java
+K 25
+svn:wc:ra_dav:version-url
+V 178
+/svn/YF-DB/!svn/ver/2418/01%E5%9F%BA%E7%BA%BF%E7%89%88/SunP2P/B1.0.0/08%E7%A8%8B%E5%BA%8F/a%E6%BA%90%E4%BB%A3%E7%A0%81/SunP2P_cms/src/com/sunyard/directbank/enums/ISUSESTATE.java
+END

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.syslog.dao.OperLogDao">
+	 
+	<insert id="insertToOperLog" parameterType="java.util.Map">
+		insert into
+		admin_operlog(log_id,oper_time,user_id,user_name,fun_url,user_ip,rst_code,oper_info)
+		values(#{log_id},now(),#{user_id},#{user_name},#{fun_url},#{user_ip},#{rst_code},#{oper_info})
+	</insert>
+
+	<update id="updateOperRstCode" parameterType="java.util.Map">
+		update admin_operlog set rst_code = #{rst_code} where log_id = #{log_id}
+	</update>
+	
+	<sql id="queryDynSql_operlog">
+		<if test="user_id !=null and user_id !='' ">
+			and user_id like '%${user_id}%'
+		</if>
+		<if test="user_name !=null and user_name !='' ">
+			and user_name like '%${user_name}%'
+		</if>
+		<if test="start_time !=null and start_time !=''">
+			<![CDATA[and date_format(oper_time,'%Y-%m-%d') >= '${start_time}']]>
+		</if>
+		<if test="end_time !=null and end_time !='' ">
+			<![CDATA[and date_format(oper_time,'%Y-%m-%d') <= '${end_time}']]>
+		</if>
+	</sql>
+	
+	<sql id="sqlhead">
+		select n.*,m.privilege_name
+	</sql>
+	
+	<sql id="sqlcount">
+		select count(*)
+	</sql>
+	
+	<sql id="sqlbody">
+		from admin_operlog n left join admin_privilege m on n.fun_url = m.url where 1=1
+		<include refid="queryDynSql_operlog" />
+		order by oper_time
+	</sql>
+	
+	<select id="selectList" parameterType="java.util.Map" resultType="java.util.Map">
+		<include refid="sqlhead"/>
+		<include refid="sqlbody"/>
+	</select>
+	
+	<select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		<include refid="sqlcount"/>
+		<include refid="sqlbody"/>
+	</select>
+	
+	<select id="pageQuery" parameterType="java.util.Map" resultType="java.util.Map">
+		<include refid="sqlhead"/>
+		<include refid="sqlbody"/>
+		limit #{startRow},#{endRow}
+	</select>
+	
+	<!-- 根据user_name查询用户 -->
+	<select id="getByName" parameterType="java.lang.String" resultType="java.util.Map">
+		select * from admin_user where user_name=#{user_name}
+	</select>
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.transstatus.dao.TransStatusDao">
+	
+	<!-- 查询记录信息总数 -->
+	<select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) from prod_transstatus where 1=1
+       <include refid="queryDynSql"/>
+	</select>
+    
+    <!-- 分页查询 -->
+	<select id="pageQuery" parameterType="java.util.Map"
+		resultType="com.sunyard.directbank.transstatus.model.TransStatus">
+		select * from prod_transstatus where 1=1
+        <include refid="queryDynSql"/>
+		limit #{startRow},#{endRow}
+	</select>
+	
+	<!-- 删除记录-->
+	<delete id="delete" parameterType="com.sunyard.directbank.transstatus.model.TransStatus">
+		DELETE FROM prod_transstatus WHERE prod_type=#{prod_type}
+		and prod_id=#{prod_id} and trans_code=#{trans_code}
+	</delete>
+   
+    <!-- 增加记录 -->
+    <insert id="save" parameterType="com.sunyard.directbank.transstatus.model.TransStatus">
+        insert into prod_transstatus (prod_type,prod_id,trans_code,enable_flag,status,flag1) 
+        values (#{prod_type},#{prod_id},#{trans_code},#{enable_flag},#{status},#{flag1})
+    </insert>
+   <!-- 查询一条记录-->
+    <select id="findByKey" parameterType="com.sunyard.directbank.transstatus.model.TransStatus"
+     resultType="com.sunyard.directbank.transstatus.model.TransStatus">
+        SELECT * FROM prod_transstatus WHERE prod_type=#{prod_type}
+		AND prod_id=#{prod_id} AND trans_code=#{trans_code} 
+    </select>
+    
+    <!-- 修改记录 -->
+    <update id="update" parameterType="com.sunyard.directbank.transstatus.model.TransStatus">
+       update prod_transstatus set enable_flag=#{enable_flag},status=#{status},flag1=#{flag1} where prod_type=#{prod_type}
+		AND prod_id=#{prod_id} AND trans_code=#{trans_code}
+    </update>
+    
+    <sql id="queryDynSql">
+		<if test="prod_type != null and prod_type !=''">
+			AND prod_type LIKE '%${prod_type}%'
+		</if>
+		<if test="prod_id != null and prod_id !=''">
+			AND prod_id LIKE '%${prod_id}%'
+		</if>
+		<if test="trans_code != null and trans_code !=''">
+			AND trans_code LIKE '%${trans_code}%'
+		</if>
+		<if test="status != null and status !=''">
+			AND status LIKE '%${status}%'
+		</if>
+	</sql>
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.batchdate.dao.BatchDateDao">
+	<sql id="queryDynSql">
+		<if test="batchdate_type !=null and batchdate_type !='' ">
+			and batchdate_type like '%${batchdate_type}%'
+		</if>
+		<if test="prod_id !=null and prod_id !='' ">
+			and prod_id like '%${prod_id}%'
+		</if>
+		<if test="prod_type !=null and prod_type !='' ">
+			and prod_type like '%${prod_type}%'
+		</if>
+	</sql>
+	
+	<sql id="selectCore">
+		 FROM batch_days where 1=1 
+		 <include refid="queryDynSql"/>
+		 ORDER BY batch_date,batch_time
+	</sql>
+	<select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) <include refid="selectCore"/>
+	</select>
+	
+	<select id="pageQuery" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT * <include refid="selectCore"/>
+		limit #{startRow},#{endRow}
+	</select>
+	
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert into batch_days (batchdate_type,batch_date,batch_time,prod_type,prod_id,status) values 
+		<foreach collection="list" item="item" index="index" separator=",">
+			( #{item.batchdate_type}, #{item.batch_date}, #{item.batch_time}, #{item.prod_type}, #{item.prod_id}, #{item.status})
+		</foreach>
+	</insert>
+	
+	<insert id="insertOverViewByPK" parameterType="java.util.Map">
+		insert into batch_days_overview 
+		(batchdate_type,spec_date,batch_time,prod_type,prod_id,batch_add,choose_year,month_start,
+		month_end,date_start,date_end,not_batch_date) 
+		values
+		(#{batchdate_type}, #{spec_date}, #{batch_time}, #{prod_type}, #{prod_id},#{batch_add},#{choose_year},#{month_start},
+		#{month_end},#{date_start},#{date_end},#{not_batch_date})
+	</insert>
+	
+	<select id="loadOverViewByPK" parameterType="java.util.Map" resultType="java.util.Map">
+		select * from batch_days_overview where 1=1 
+		<include refid="queryDynSql"/>
+	</select>
+	
+	<select id="getCountOverViewByPK" parameterType="java.util.Map" resultType = "java.lang.Integer">
+		select count(*) from batch_days_overview where 1=1 
+		<include refid="queryDynSql"/>
+	</select>
+	
+	<delete id="deleteOverViewByPK" parameterType="java.util.Map">
+		delete from batch_days_overview where 1=1
+		<include refid="queryDynSql"/>
+	</delete>
+	
+	<delete id="deleteBatchByPK" parameterType="java.util.Map">
+		delete from batch_days where 1=1
+		<include refid="queryDynSql"/>
+	</delete>
+	
+	<select id="selectBatchDateByProductId" parameterType="java.util.Map" resultType="java.util.Date">
+		select batch_date from batch_days where prod_id = #{prod_id} order by batch_date
+	</select>
+	
+</mapper>

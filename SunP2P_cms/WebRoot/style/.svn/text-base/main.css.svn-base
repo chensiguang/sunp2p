@@ -1,0 +1,224 @@
+@charset "utf-8";
+@import url("tools.css");
+/* 	CSS Document 僅供主工作區域使用 
+	AUTHOR	: YAOMINGMING
+	DATE	: 2009 05
+*/
+body 						{	font-size:12px;	margin:5px; background-color:#cde0fa; 
+								FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#deeff9,endColorStr=#5096d1);	}
+form						{	margin:0px; }
+td 							{	font-size:12px;	}
+img 						{	border:none;	}
+
+/* 普通连接 */
+ a:link,
+ a:visited					{ text-decoration:none;	color:#15428b;	}
+ 
+ a {
+    blr:expression(this.onFocus=this.blur()); /*IE--去掉虛線邊寬*/
+	text-decoration:none;
+}
+/* 滑鼠点擊时改變當前菜单背景圖片 */
+a:activating {
+	border: 1px solid #7CC0E3;
+	background-image: url(../images/crm/left_menu_light.gif);
+}
+
+/* 帶方框的小单元格 */
+.Dotted_td {
+	border:black dotted 1px;
+	width:15px;
+	text-align:center;
+}
+.Dotted_table td{
+	border:black dotted 1px;
+	width:15px;
+	text-align:center;
+}
+.textBoxAcc			    {	height: 15px;	width: 125px;	border: solid 1px #6699cc;	}
+.Box_Checked {font-family: "Wingdings 2"; font-size:16px;}
+
+
+/* */
+.gridForm 					{	border: 1px solid #6893cf;	background-color:#FFFFFF;	}
+.gridForm th 				{	height:24px;	background-image:url(../images/crm/datagridtitle.gif);
+								font-size:14px;	font-weight:normal;	font-weight:bold;	color: #14418b;	text-align:center;	}
+.gridForm1 					{	border: 1px solid #6893cf;	background-color:#FFFFFF;	}
+.gridForm1 th 				{	height:24px;	background-image:url(../images/crm/datagridtitle.gif);
+								font-size:12px;	font-weight:normal;	font-weight:bold;	color: #14418b;	text-align:left;	}
+
+.gridTitle 					{	height:100%;	border: 1px solid #6893cf;	background-color:#FFFFFF;	}
+.gridTitle th 				{	height:24px;	background-image:url(../images/crm/datagridtitle.gif);
+								font-size:12px;	font-weight:normal;	text-align:left; 
+							}
+.gridTitle td a:link,
+.gridTitle td a:visited		{ text-decoration:none;	color:#15428b;	}
+.gridTitle th a:link,
+.gridTitle th a:visited		{ padding:3px; padding-left:5px; padding-right:5px;	height:20px; text-decoration:none;	color:#15428b;	}
+.gridTitle th a:hover,
+.gridTitle th a:active		{ background-image:url(../images/crm/datagridtitle_light.gif);	}
+
+/* 列表样式*/
+.gridData th 				{	height:22px;	border-bottom:1px solid #cccccc;
+								font-size:12px;	text-align:left;	font-weight:normal;	
+								background-image:expression((this.cellIndex==0)?"url();":"url(../images/crm/datagridtitle-spline.gif)");							
+								background-color:#f0f0f0;	background-repeat:no-repeat;	background-position:left;
+								padding-left:6px;								
+							}
+							
+.gridData td 				{	height:23px;	border-bottom:1px dotted #cccccc;	padding-left:6px;}
+.gridData tr 				{	background-color:expression((this.sectionRowIndex%2==0)?"#ffffff":"#EEF4FF");	}
+
+.gridData td a:link,
+.gridData td a:visited	{ text-decoration:none;	color:#15428b;	}
+.gridData th a:link,
+.gridData th a:visited	{ padding:3px; padding-left:5px; padding-right:5px;	height:20px; text-decoration:none;	color:#15428b;	}
+.gridData th a:hover,
+.gridData th a:active	{ background-image:url(../images/crm/datagridtitle_light.gif);	}
+
+/* 列表样式*/
+.gridData1 th 				{	height:22px;	border-bottom:1px solid #cccccc;
+								font-size:12px;	text-align:left;	font-weight:normal;	
+								background-image:expression((this.cellIndex==0)?"url();":"url(../images/crm/datagridtitle-spline.gif)");							
+								background-color:#f0f0f0;	background-repeat:no-repeat;	background-position:left;
+								padding-left:6px;								
+							}
+							
+.gridData1 td 				{	height:23px;	border-bottom:1px dotted #cccccc;	padding-left:6px;}
+.gridData1 tr 				{	background-color:expression((this.sectionRowIndex%2==0)?"#ffffff":"#EEF4FF");	}
+
+.gridData1 td a:link,
+.gridData1 td a:visited	{ text-decoration:none;	color:#15428b;	}
+.gridData1 th a:link,
+.gridData1 th a:visited	{ padding:3px; padding-left:5px; padding-right:5px;	height:20px; text-decoration:none;	color:black;	}
+.gridData1 th a:hover,
+.gridData1 th a:active	{ background-image:url();	}
+
+
+.splitHeader	{ background-color:#6893cf; }
+.splitToolbar	{ background-color:#CCCCCC; }
+.gridToolbar	{ background-color:#F0F0F0; }
+
+/* 二級任务分类區 */
+.taskType #typetitle 		{	color: #0033FF;	font-weight:bold;	}
+span.typeInfo	{	color: #CC6600;	font-weight:bold;	}
+.taskType a:link,
+.taskType a:visited			{	text-decoration:none;		color:#15428b;	}
+.taskType a:hover,
+.taskType a:active 			{		color: #996600;}
+
+ a.abtn { padding-left:3px; padding-right:3px; }
+ a.abtn:link,
+ a.abtn:visited	{ text-decoration:none; color:#15428b;	}
+ a.abtn:hover,
+ a.abtn:active	{ background-color: #CCFFFF; padding-right:2px;border-bottom: 1px solid #6699FF;border-right: 1px solid #6699FF;}
+
+/* 资讯使用 */
+
+.information 			{	width:100%; height:100%; }
+.information th			{	font-size:15px; font-weight:bold; text-align:center; vertical-align:bottom; background-image:url('');}
+.information td			{	font-size:13px;  }
+
+
+.textBox 				{	height: 20px;	width: 125px;	border: solid 1px #6699cc;	}
+.textBox75px 			{	height: 20px;	width: 75px;	border: solid 1px #6699cc;	}
+.textBox425px 			{	height: 20px;	width: 425px;	border: solid 1px #6699cc;	}
+.textBoxDate			{	height: 20px;	width: 80px;	border: solid 1px #6699cc;	}
+.textArea425px 			{	width: 425px;	border: solid 1px #6699cc;	}
+.textArea 				{	font-size: 12px;	border: 1px solid #6699cc;	overflow-y:hidden;	}
+
+.textBoxForms			{	padding-left:22px; }
+.textBoxForms td		{	height:28px; text-align:left;}
+.textBoxForms input,
+.textBoxForms select	{
+	height: 25px; 
+	width: 170px; 
+	padding-top:4px;
+	border: solid 1px #6699cc;
+	background-image:url(../360info/images/txt_bg2.jpg);
+	vertical-align:middle;
+} 
+.textBoxFormsTitleBar 	{
+	background-image:url(../images/crm/bg_bar.gif); background-repeat:no-repeat; background-position:left bottom;
+	padding-left:20px;
+	padding-top:7px;
+	height:25px;
+}
+
+
+.fastSearchTextBox 		{	height: 20px;	width: 180px;	border: solid 1px #6699cc;	padding:2px 0px 0px 2px;	}
+.fastSearchTextBox100px {	height: 20px;	width: 100px;	border: solid 1px #6699cc;	padding:2px 0px 0px 2px;	}
+.fastSearchButton		{	border: none;	background:url(../images/crm/fastsearch.gif);	width:22px;	height:20px;}
+.selectButton			{	border: none;	background:url(../images/crm/fastsearch.gif);	width:22px;	height:20px;}					/*章守倉改2009.7.29*/
+
+.fontRed				{	color:#FF0000;	}
+.fontGreen				{	color:#009900;	}
+.fontBlue				{	color:blue;	}
+.fontBold				{	font-weight: bold;}
+
+.fontTopInfo 			{	color:#03356d; }
+.fontTopLgnInfo 		{	color:white; }
+.fontMsgTitle			{	color:black; }
+.fontMsgNum				{	color:white;}
+
+/* 固定表頭 */
+.FixedTitleRow	        {	position: relative; 	top: expression(this.offsetParent.scrollTop); 	z-index: 10;	}
+.FixedTitleColumn       {   position: relative;     left: expression(this.parentElement.offsetParent.scrollLeft);   }
+.FixedDataColumn        {   position: relative;     left: expression(this.parentElement.offsetParent.parentElement.scrollLeft);     }
+
+
+/* 浏览状态文字樣式 藍、綠、紅、金色*/
+.browsed				{	color:#0000FF;	}
+.closed					{	color:#009900;	}
+.aborted				{	color:#FF0000;	}
+.common				{	color:#996600;	}
+
+/* 其他--章 */
+.bigTable				{	margin-top:20px;	}
+
+.button{
+	border:0px;
+	CURSOR: hand; 
+	width:70px;
+	height:22px;
+	background-image:url(../images/crm/btnbg2.gif);
+}
+
+hander {cursor:hander;}
+
+/*-----分頁按鈕---------*/
+tr.listToolbar { background-color:#f0f0f0;padding-left:6px;padding-right:6px;height:22px;}
+th.listToolbar { text-align: right;padding-left:6px;padding-right:6px;}
+
+input.decimal { text-align: right; }
+input.readonly	{ color: #333333; background-color: #F8F8F4; border:1px solid #CCCCCC;}
+textarea.readonly	{ color:#333333;  background-color: #F8F8F4; border:1px solid #CCCCCC; overflow-y:visible; }
+
+div.loading{ padding-left:30px; line-height:30px; background:#fbfbfb url(../images/theme/wait.gif) no-repeat 5px 5px; }
+span.validate { color: #ff0000; text-decoration: none; border-style: none; }
+span.validate2 { font-size: 14px; color: #ff0000; text-decoration: none; border-style: none; }
+#expandcontractdiv { border: 1px solid #336600; background-color: #FFFFCC; margin: 0 0 .5em 0; padding: 0.2em; }
+.decimal-invalid,textarea.decimal-invalid{background:#fff url(../images/ext/grid/invalid_line.gif) repeat-x bottom;text-align: right;border:1px solid #dd7870;}
+.dirty-cell{background:transparent url(../images/ext/grid/dirty.gif) no-repeat 0 0;}
+.invalid{background:#fff url(../images/ext/grid/invalid_line.gif) repeat-x bottom;border:1px solid #dd7870;}
+
+.mesWindow{border:#666 1px solid;background:#fff;}
+.msgWindowX2{cursor:move;}
+.mesWindowTop{border-bottom:#eee 1px solid;margin-left:4px;padding:3px;font-weight:bold;text-align:left;font-size:12px;color: #14418b;}
+.mesWindowContent{margin:4px;font-size:12px;}
+.mesWindow .close{height:15px;width:40px;border:none;cursor:pointer;text-decoration:underline;background:#fff}
+
+/* 日期选擇 */
+.date			{	height:20px; width:90px; border: solid 1px #6699cc; background-image:url(../images/crm/date-s18.gif); background-repeat:no-repeat; background-position:right;}
+.textSelDate	{	height:20px; width:136px; border: solid 1px #6699cc; background-image:url(../images/crm/date-s18.gif); background-repeat:no-repeat; background-position:right;}
+.centerClo{height:22px;	border-bottom:1px solid #cccccc;
+								font-size:12px;	text-align:left;	font-weight:normal;	
+								background-image:expression((this.cellIndex==0)?"url();":"url(../images/crm/datagridtitle-spline.gif)");							
+								background-color:#f0f0f0;	background-repeat:no-repeat;	background-position:left;
+								padding-left:6px;}
+.centerClo2{
+	background-color:#f0f0f0;
+}
+.divHide{
+	overflow:hidden;text-overflow:ellipsis;white-space:nowrap
+}

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.userapprove.dao.UserApproveDao">
+
+	<!-- 查询记录信息总数 -->
+	<select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM eacc_accountinfo WHERE acc_state = #{acc_state}
+		<include refid="queryDynSql" />
+	</select>
+	
+	<!-- 查询所有未审核信息 -->
+	<select id="pageQuery" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT * FROM eacc_accountinfo WHERE acc_state = #{acc_state} 
+		<include refid="queryDynSql" />
+		ORDER BY reg_time DESC
+		LIMIT #{startRow}, #{rows}
+	</select>
+	
+	<!-- 查询单条未审核信息 -->
+	<select id="getById" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT * FROM eacc_accountinfo WHERE eacc_no = #{eacc_no}
+	</select>
+	
+	<!-- 查询单条未审核信息 -->
+	<select id="selectComActive" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT score,voucher_amt,amt FROM com_active WHERE trans_id = #{trans_id} AND enable_flag = #{enable_flag}
+	</select>
+	
+	<!-- 审核通过/拒绝，更新客户电子账号信息登记表 -->
+	<update id="updateAccInfo" parameterType="java.util.Map">
+		UPDATE eacc_accountinfo SET approve_name = #{approve_name},approve_time = NOW(),acc_state = #{acc_state}
+		WHERE eacc_no=#{eacc_no}
+	</update>
+	
+	<!-- 审核通过，更新客户电子账号信息登记表积分+余额 -->
+	<update id="updateAccAmt" parameterType="java.util.Map">
+		UPDATE eacc_accountinfo SET n_balance = n_balance + #{voucher_amt} + #{amt},t_balance = t_balance + #{voucher_amt} + #{amt},
+			t_score = t_score + #{score},n_score = n_score + #{score}
+		WHERE eacc_no=#{eacc_no}
+	</update>
+	
+	<!-- 插入积分明细 -->
+	<insert id="insertScoreList" parameterType="java.util.Map" >
+		INSERT INTO eacc_scorelist(eacc_no,score,change_date,change_time,change_type,change_reason,score_type,description) 
+		VALUES(#{eacc_no},#{score},NOW(),NOW(),#{change_type},#{change_reason},#{score_type},#{description})
+	</insert>
+	
+	<!-- 插入资金进出明细 -->
+	<insert id="insertAmtList" parameterType="java.util.Map" >
+		INSERT INTO eacc_accountamtlist(serial_id,system_date,trans_date,trans_time,eacc_no,amt_type,amt_channel,amt)
+		VALUES(#{serial_id},(SELECT DATE_FORMAT(param_value,'%Y-%m-%d')param_value FROM com_param WHERE param_id=#{system_date}),
+			NOW(),NOW(),#{eacc_no},#{amt_type},#{amt_channel},#{amt})
+	</insert>
+	
+	<!-- 插入抵用券明细 -->
+	<insert id="insertVoucherInfo" parameterType="java.util.Map" >
+		INSERT INTO eacc_voucherinfo(voucher_amt,eacc_no,create_date,description) VALUES(#{voucher_amt},#{eacc_no},NOW(),#{description})
+	</insert>
+	
+	<!-- 插入客户账户表 -->
+	<insert id="insertAccList" parameterType="java.util.Map" >
+		INSERT INTO eacc_accountlist(eacc_no,acc_status) VALUES(#{eacc_no},#{acc_status})
+	</insert>
+	
+	<sql id="queryDynSql">
+		<if test="eacc_no !=null and eacc_no !='' "> and eacc_no like '%${eacc_no}%' </if>
+		<if test="name !=null and name !='' "> and name like '%${name}%' </if>
+		<if test="mobile !=null and mobile !='' "> and mobile like '%${mobile}%' </if>
+		<if test="start_time !=null and start_time !=''"> <![CDATA[and date_format(reg_time,'%Y-%m-%d') >= '${start_time}']]> </if>
+		<if test="end_time !=null and end_time !='' "> <![CDATA[and date_format(reg_time,'%Y-%m-%d') <= '${end_time}']]> </if>
+	</sql>
+	
+</mapper>

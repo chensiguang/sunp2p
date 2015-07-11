@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Struts2Diagram version="2.0">
+  <package name="default" location="10,10" size="180,71" />
+  <package name="aciton" location="200,51" size="170,121">
+    <action name="createAccount" location="10,21" size="150,40" />
+    <action name="userAction" location="0,0" size="0,0">
+      <result name="success">
+        <resourceEdge source="success" routing="0" target="suc.jsp" />
+      </result>
+      <result name="active">
+        <resourceEdge source="active" routing="0" target="active.jsp" />
+      </result>
+      <result name="error">
+        <resourceEdge source="error" routing="0" target="userLogin.jsp" />
+      </result>
+    </action>
+  </package>
+  <webResource name="suc.jsp" path="suc.jsp" location="0,0" size="0,0" />
+  <webResource name="active.jsp" path="active.jsp" location="0,0" size="0,0" />
+  <webResource name="userLogin.jsp" path="userLogin.jsp" location="0,0" size="0,0" />
+</Struts2Diagram>
+

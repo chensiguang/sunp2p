@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.finance.dao.FinanceDao">
+
+	<!-- 查询融资信息 -->
+	<select id="pageQuery" parameterType="java.util.Map" resultType="java.util.HashMap">
+		SELECT b.*, IFNULL(a.successtimes,0) successtimes ,IFNULL(a.sumamt,0.00) sumamt 
+		FROM (SELECT fin.financ_id,fin.eacc_no,fin.reg_date,fin.financ_amt,fin.financ_cycle,fin.financ_int,fin.repay_type,
+				  fin.status,cus.trust_lvl,cus.cus_type,cus.name,cus.mobile,fin.guarantee_way,fin.use_date,fin.manage
+			  FROM eacc_financinfo fin 
+			  LEFT JOIN eacc_accountinfo cus 
+			  ON fin.eacc_no=cus.eacc_no 
+			  WHERE 1=1 <include refid="queryDynSql"/>) b 
+		LEFT JOIN ( SELECT fin.eacc_no, SUM(fin.status) successtimes,SUM(fin.financ_amt) sumamt 
+					FROM eacc_financinfo fin WHERE fin.status!=#{status}
+					GROUP BY fin.eacc_no) a 
+		ON a.eacc_no = b.eacc_no
+		WHERE b.status=#{status} 
+		ORDER BY b.reg_date 
+	    LIMIT #{startRow},#{rows}
+	</select>
+	
+	<!-- 查询记录信息总数 -->
+	<select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) 
+		FROM (  SELECT fin.reg_date,fin.status,cus.trust_lvl,fin.use_date,fin.manage 
+				FROM eacc_financinfo fin LEFT JOIN eacc_accountinfo cus ON fin.eacc_no=cus.eacc_no 
+				WHERE fin.status=#{status} <include refid="queryDynSql"/> ) ifo 
+		WHERE 1=1;
+	</select>
+	
+	<!-- 查询融资信息明细 -->
+	<select id="details" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT b.*,a.successtimes,a.sumamt 
+		FROM (SELECT fin.financ_id,fin.eacc_no,fin.reg_date,fin.financ_amt,fin.financ_cycle,fin.financ_int,
+				  fin.repay_type,fin.status,cus.trust_lvl,cus.cus_type,cus.name,cus.mobile,cus.email,
+				  cus.risk_lvl,DATE_FORMAT(cus.reg_time,'%Y-%m-%d %T') reg_time ,fin.guarantee_way,fin.use_date,fin.manage
+			  FROM eacc_financinfo fin 
+			  LEFT JOIN eacc_accountinfo cus 
+			  ON fin.eacc_no=cus.eacc_no 
+			  WHERE fin.financ_id=#{financ_id}) b 
+		LEFT JOIN (SELECT fin.eacc_no, COUNT(fin.status)successtimes, SUM(fin.financ_amt)sumamt
+				   FROM eacc_financinfo fin 
+				   WHERE fin.status=0 
+				   GROUP BY fin.eacc_no) a 
+		ON a.eacc_no = b.eacc_no
+	</select>
+	
+	<!-- 审核通过 -->
+	<update id="approve" parameterType="java.util.Map" >
+		UPDATE eacc_financinfo SET status=#{status},remark=#{remark},approve_date=#{approve_date} WHERE financ_id=#{financ_id}
+	</update>
+	
+	<!-- 审核拒绝 -->
+	<update id="refuse" parameterType="java.util.Map" >
+		UPDATE eacc_financinfo SET status=#{status},remark=#{remark},approve_date=#{approve_date} WHERE financ_id=#{financ_id}
+	</update>
+	
+	<!-- 选择单条信息 -->
+	<select id="selectOneFinance" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT fin.financ_id,fin.eacc_no,fin.reg_date,fin.financ_amt,cus.name,fin.manage,fin.status
+		FROM eacc_financinfo fin 
+		LEFT JOIN eacc_accountinfo cus 
+		ON fin.eacc_no=cus.eacc_no
+		WHERE fin.financ_id=#{financ_id}
+	</select>
+	
+	<sql id="queryDynSql">
+		<if test="eacc_no != null and eacc_no !=''">
+			AND fin.eacc_no = #{eacc_no}
+		</if>
+		<if test="manage != null and manage !=''">
+			AND fin.manage LIKE '%${manage}%'
+		</if>
+		<if test="starttime != null and starttime !=''">
+			AND fin.reg_date >= #{starttime}
+		</if>
+		<if test="endtime != null and endtime !=''">
+			AND #{endtime} >= fin.reg_date
+		</if>
+		<if test="status != null and status !=''">
+			AND fin.status LIKE '%${status}%'
+		</if>
+		<if test="trust_lvl != null and trust_lvl !=''">
+			AND cus.trust_lvl LIKE '%${trust_lvl}%'
+		</if>
+	</sql>
+	
+</mapper>

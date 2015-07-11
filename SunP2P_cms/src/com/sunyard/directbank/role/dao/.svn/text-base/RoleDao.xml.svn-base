@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyard.directbank.role.dao.RoleDao">
+
+	<!-- 查询所有角色 -->
+	<select id="selectAll" resultType="com.sunyard.directbank.role.model.RoleModel">
+		SELECT * FROM admin_role
+	</select>
+
+	<!-- 分页查询 -->
+	<select id="pageQuery" parameterType="java.util.Map" resultType="com.sunyard.directbank.role.model.RoleModel">
+		SELECT * FROM admin_role ro WHERE 1=1
+		<include refid="queryDynSql" />
+		LIMIT #{startRow},#{rows}
+	</select>
+	
+	<!-- 查询记录信息总数 -->
+	<select id="pageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM admin_role ro WHERE 1=1
+		<include refid="queryDynSql"/>
+	</select>
+
+	<!-- 查询某个角色 -->
+	<select id="selectRole" resultType="com.sunyard.directbank.role.model.RoleModel">
+		SELECT * FROM admin_role ro WHERE 1=1
+		<include refid="queryDynSql"/>
+	</select>
+
+	<!-- 删除角色 -->
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM admin_role WHERE role_id=#{role_id}
+	</delete>
+	
+	<!-- 批量删除角色 -->
+	<delete id="deleteBatch" parameterType="java.util.List">
+		DELETE FROM admin_role WHERE role_id in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")" >
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 添加角色 -->
+	<insert id="save">
+		INSERT INTO admin_role(role_id,role_name,role_desc) VALUES(#{role_id},#{role_name},#{role_desc})
+	</insert>
+
+	<!-- 根据role_id查询角色 -->
+	<select id="getById" parameterType="java.lang.String" resultType="com.sunyard.directbank.role.model.RoleModel">
+		SELECT * FROM admin_role WHERE role_id=#{role_id}
+	</select>
+
+	<!-- 修改角色 -->
+	<update id="update">
+		Update admin_role set role_name=#{role_name},role_desc=#{role_desc} WHERE role_id=#{role_id}
+	</update>
+	
+	<!-- 查询所有已分配角色 -->
+	<select id="selectAllocatedRoles" parameterType="java.lang.String" resultType="com.sunyard.directbank.role.model.RoleModel">
+		SELECT * FROM admin_role ro LEFT JOIN admin_userrole ur ON ur.role_id=ro.role_id WHERE ur.user_id=#{user_id}
+	</select>
+	
+	<!-- 分配角色 -->
+	<insert id="roleDistbAdd">
+		INSERT INTO admin_userrole(role_id,user_id) VALUES(#{role_id},#{user_id})
+	</insert>
+	
+	<!-- 分配角色 -->
+	<delete id="roleDistbDelete" parameterType="java.lang.String">
+		DELETE FROM admin_userrole WHERE role_id=#{role_id} AND user_id=#{user_id}
+	</delete>
+	
+	<sql id="queryDynSql">
+		<if test="role_id != null">
+			AND ro.role_id LIKE '%${role_id}%'
+		</if>
+		<if test="role_name != null">
+			AND ro.role_name LIKE '%${role_name}%'
+		</if>
+	</sql>
+	
+</mapper>
